@@ -2,7 +2,7 @@
   <div id="app">
    <div class="header">  
      <img src="./assets/hellos_logo.png" />
-    <p>Note Knock</p>
+    <p><a href="javascript:location.reload()">Note Knock</a></p>
     <p class="subtitle" style="font-size:60px; margin:0px">낰낰</p>
    </div>
     <div class="noteContainer">

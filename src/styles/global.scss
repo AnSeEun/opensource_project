@@ -45,6 +45,14 @@ body {
   }
 }
 
+a {
+  text-decoration: none;
+  color: white;
+  &:hover {
+    color: #FFF2CC;
+  }
+}
+
 .subtitle {
   position: absolute;
   top: 0px;
@@ -110,10 +118,9 @@ body {
 
   div span span {
     margin-right: 10px;
-  }
-
-  div span span:hover {
-    color: #b9b8b8;
+    &:hover {
+      color: #FFF2CC;
+    }
   }
 }
 
@@ -158,10 +165,9 @@ body {
 .note-color {
   position: absolute;
   right: 25px;
-}
-
-.note-color:hover {
-  color: #654b52;
+  &:hover {
+    color: #654b52;
+  }
 }
 
 .note-editor-bottom {
@@ -176,8 +182,7 @@ body {
   right: 20px;
   top: 10px;
   font-size: 25px;
-}
-
-.delete:hover {
-  color: #a32525;
+  &:hover {
+    color: #a32525;
+  }
 }
