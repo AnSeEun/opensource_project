@@ -3,14 +3,18 @@
    <div class="header">  
      <img src="./assets/hellos_logo.png" />
     <p>Note Knock</p>
+    <p class="subtitle" style="font-size:60px; margin:0px">낰낰</p>
    </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
                 <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
-                <span >{{note.title}} <font size="2em" color="gray">by {{note.nickname}} {{note.time}}</font></span>
+                <span ><font size="4.5px" style="font-weight: bold; color:#654B52;">{{note.title}}</font><br><font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</font></span>
                 <p class="note-text">{{ note.text }}</p>
-                <span class="color" @noteColor = "colorNote" @click.prevent="colorNote"><i class="fas fa-palette"></i></span> 
+                <hr/>
+                
+                <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
+                <span class="note-color" @noteColor = "colorNote" @click.prevent="colorNote"><i class="fas fa-palette"></i></span> 
             </div>
         </div>
     <app-note-editor v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
