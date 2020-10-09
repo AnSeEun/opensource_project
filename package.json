@@ -14,8 +14,12 @@
     "core-js": "^3.6.4",
     "uuid": "^8.0.0",
     "vue": "^2.6.11",
+<<<<<<< HEAD
+    "vue-moment": "^4.1.0"
+=======
     "vue-moment": "^4.1.0",
     "vue-momentjs": "^1.0.0"
+>>>>>>> master
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
