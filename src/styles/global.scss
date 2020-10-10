@@ -43,26 +43,66 @@ body {
     margin-left: 20px;
     height: 50px;
   }
+
+  & .subtitle {
+    text-shadow: none;
+    letter-spacing: -10px;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+  }
 }
 
 a {
   text-decoration: none;
   color: white;
   &:hover {
-    color: #FFF2CC;
+    color: #fff2cc;
   }
 }
 
-.subtitle {
-  position: absolute;
-  top: 0px;
-  right: 20px;
-  margin: 0px;
+hr {
+  border: 0px;
+  height: 0.2px;
+  background-color: #7a6a6e;
+}
+
+input,
+textarea {
+  caret-color: #7a6a6e;
+}
+
+::selection {
+  color: #fff;
+  background-color: #7a6a6e;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #654b52;
+  border-radius: 500px;
 }
 
 .title-input {
   padding: 10px;
   border: none;
+  outline: none;
+}
+
+.title-view {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #fff;
+  text-shadow: -1px 0 rgb(235, 159, 159), 0 2px rgb(235, 159, 159),
+    1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159);
+  font-weight: bold;
+  font-size: large;
+  padding: 0px;
+  background-color: transparent;
+  border: transparent;
   outline: none;
 }
 
@@ -78,10 +118,9 @@ a {
   outline: none;
   font-size: 100px;
   cursor: pointer;
-}
-
-.add-btn:hover {
-  color: #f4cccc;
+  &:active {
+    color: #f4cccc;
+  }
 }
 
 .note-editor {
@@ -111,16 +150,31 @@ a {
   outline: none;
 }
 
+.note-date {
+  margin: 5px 0px 10px 0px;
+  font-size: 11px;
+  color: #7a6a6e;
+}
+
 .noteContainer {
   column-count: 4;
   column-gap: 1em;
   margin: 50px 25px;
+  // overflow-x: auto;
 
   div span span {
-    margin-right: 10px;
+    padding: 0px 5px;
+    box-sizing: content-box;
+    color: #7a6a6e;
     &:hover {
-      color: #FFF2CC;
+      background-color: #654b52;
+      color: #fff;
     }
+  }
+
+  div span span::selection {
+    background-color: transparent;
+    color: #7a6a6e;
   }
 }
 
@@ -139,7 +193,7 @@ a {
   //width: 100%;
   width: 300px;
   height: 300px;
-  background: #f4cccc;
+  background: #fff2cc;
   padding: 25px;
   word-break: break-word;
   cursor: pointer;
@@ -148,6 +202,28 @@ a {
 
 .note-text {
   height: 150px;
+}
+
+.note-textarea {
+  padding-right: 7px;
+  padding-left: 0px;
+  width: 253px;
+  height: 155px;
+  background-color: transparent;
+  border: none;
+  resize: none;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #654b52;
+  font-size: 15px;
+  letter-spacing: -0.7px;
+
+  &:hover {
+    outline: none;
+    cursor: default;
+  }
+  &:focus {
+    outline: none;
+  }
 }
 
 .textform-B {
@@ -165,6 +241,7 @@ a {
 .note-color {
   position: absolute;
   right: 25px;
+  color: #7a6a6e;
   &:hover {
     color: #654b52;
   }
@@ -182,7 +259,10 @@ a {
   right: 20px;
   top: 10px;
   font-size: 25px;
-  &:hover {
-    color: #a32525;
+  color: #fff;
+  text-shadow: -1px 0 rgb(235, 159, 159), 0 2px rgb(235, 159, 159),
+    1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159);
+  &:active {
+    color: #fc5e5e;
   }
 }

@@ -3,15 +3,15 @@
    <div class="header">  
      <img src="./assets/hellos_logo.png" />
     <p><a href="javascript:location.reload()">Note Knock</a></p>
-    <p class="subtitle" style="font-size:60px; margin:0px">낰낰</p>
+    <p class="subtitle" style="font-size:70px; margin:0px">낰낰</p>
    </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
               <input class="title-view" type="text" v-model="note.title" placeholder="Title">
                 <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
-                <span><p font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</p></span>
-                <textarea rows="9" v-model="note.text" placeholder="Take a note..."></textarea>
+                <span ><p class="note-date" font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</p></span>
+                <textarea class="note-textarea" rows="9" onclick="this.selec()" v-model="note.text" placeholder="Take a note..."></textarea>
                 <hr/>
                 
                 <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
