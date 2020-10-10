@@ -3,10 +3,10 @@
    <div class="header">  
      <img src="./assets/hellos_logo.png" />
     <p><a href="javascript:location.reload()">Note Knock</a></p>
-    <p class="subtitle" style="font-size:70px; margin:0px">낰낰</p>
+    <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
    </div>
    <div>
-     <select>
+     <select class="category-filter">
               <option disalbed value="기본" v-for="list in categorys" :key="list">
                 {{list}}
               </option>                 
@@ -14,7 +14,8 @@
   </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
-            <div class="note-area">
+            <div>
+              <span class="favorites"><i class="far fa-star"></i></span>
               <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
               <span class="note-date-span"><font class="note-date" size="2em" color="#FFFFFF">{{note.time}} <u><i>By {{note.nickname}}</i></u></font></span>
               <input class="title-view" type="text" v-model="note.title" placeholder="Title">
@@ -34,7 +35,7 @@
             </div>
         </div>
     <app-note-editor :categorylist=categorys v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
-    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i class="fas fa-plus"></i>
+    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i id="plus" class="fas fa-plus"></i>
      </button>
     </div>
   </div>
