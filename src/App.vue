@@ -6,14 +6,15 @@
     <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
    </div>
    <div>
-     <select class="category-filter">
-              <option disalbed value="기본" v-for="list in categorys" :key="list">
+     <select v-model="selected">
+              <option value=''>전체</option>
+              <option v-for="list in categorys" :key="list">
                 {{list}}
               </option>                 
      </select>
   </div>
     <div class="noteContainer">
-        <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
+        <div v-for="(note, index) in notesFilter(selected)" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
               <span class="favorites"><i class="far fa-star"></i></span>
               <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
@@ -49,6 +50,7 @@ export default {
   data: function() {
     return {
       editorOpen: false,
+      selected:'',
       notes: [
         {
           category:'',
@@ -80,6 +82,11 @@ export default {
     },
     deleteNote(index) {
       this.notes.splice(index, 1)
+    },
+    notesFilter: function(category){
+      return this.notes.filter(function(note){
+          return note.category == category || category==''
+      })
     }
 
   },
