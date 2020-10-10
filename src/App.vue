@@ -8,9 +8,10 @@
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
+              <input class="title-view" type="text" v-model="note.title" placeholder="Title">
                 <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
-                <span ><font size="4.5px" style="font-weight: bold; color:#654B52;">{{note.title}}</font><br><font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</font></span>
-                <p class="note-text">{{ note.text }}</p>
+                <span><p font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</p></span>
+                <textarea rows="9" v-model="note.text" placeholder="Take a note..."></textarea>
                 <hr/>
                 
                 <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
