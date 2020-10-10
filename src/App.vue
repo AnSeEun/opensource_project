@@ -3,7 +3,7 @@
    <div class="header">  
      <img src="./assets/hellos_logo.png" />
     <p><a href="javascript:location.reload()">Note Knock</a></p>
-    <p class="subtitle" style="font-size:70px; margin:0px">낰낰</p>
+    <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
    </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
