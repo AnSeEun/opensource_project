@@ -14,9 +14,9 @@
   </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
-            <div>
+            <div class="note-area">
               <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
-              <span><font size="2em" color="#FFFFFF">{{note.time}} <u><i>By {{note.nickname}}</i></u></font></span>
+              <span class="note-date-span"><font class="note-date" size="2em" color="#FFFFFF">{{note.time}} <u><i>By {{note.nickname}}</i></u></font></span>
               <input class="title-view" type="text" v-model="note.title" placeholder="Title">
               <p/>
               <textarea class="note-textarea" rows="9" onclick="this.selec()" v-model="note.text" placeholder="Take a note..."></textarea>
