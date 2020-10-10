@@ -27,7 +27,7 @@ export default {
             title: '',            
             theme: '#F4CCCC',            
             text: '',
-            time : moment().format('YYYY-MM-DD')
+            time : moment().format('YYYY-MM-DD ddd')
         }
     },  
     props:['categorylist'], 
@@ -39,7 +39,7 @@ export default {
             this.title = '';
             this.text = '',
             this.theme = '#F4CCCC';
-            this.time= moment().format('YYYY-MM-DD')   
+            this.time= moment().format('YYYY-MM-DD ddd')   
         },
         deleteNote(index) {
             this.$emit('noteDeleted', index);
