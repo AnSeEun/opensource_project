@@ -5,13 +5,17 @@
     <p><a href="javascript:location.reload()">Note Knock</a></p>
     <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
    </div>
-   <div>
-     <select v-model="selected">
+   <div> 
+     <select class="category-filter" v-model="selected">
               <option value=''>전체</option>
               <option v-for="list in categorys" :key="list">
                 {{list}}
               </option>                 
      </select>
+  </div>
+  <div class="search-filter">
+    <input type="text">
+    <button type="submit">검색</button>
   </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notesFilter(selected)" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
