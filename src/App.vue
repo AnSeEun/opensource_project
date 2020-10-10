@@ -5,20 +5,35 @@
     <p><a href="javascript:location.reload()">Note Knock</a></p>
     <p class="subtitle" style="font-size:70px; margin:0px">낰낰</p>
    </div>
+   <div>
+     <select>
+              <option disalbed value="기본" v-for="list in categorys" :key="list">
+                {{list}}
+              </option>                 
+     </select>
+  </div>
     <div class="noteContainer">
         <div v-for="(note, index) in notes" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
+              <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
+              <span><font size="2em" color="#FFFFFF">{{note.time}} <u><i>By {{note.nickname}}</i></u></font></span>
               <input class="title-view" type="text" v-model="note.title" placeholder="Title">
-                <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
-                <span ><p class="note-date" font size="2em" color="#654B52">by {{note.nickname}} {{note.time}}</p></span>
-                <textarea class="note-textarea" rows="9" onclick="this.selec()" v-model="note.text" placeholder="Take a note..."></textarea>
-                <hr/>
-                
-                <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
-                <span class="note-color" @noteColor = "colorNote" @click.prevent="colorNote"><i class="fas fa-palette"></i></span> 
+              <p/>
+              <textarea class="note-textarea" rows="9" onclick="this.selec()" v-model="note.text" placeholder="Take a note..."></textarea>
+              <hr/> 
+              <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
+              <span class="categoryform">
+                 <select v-model="note.category">
+                  <option v-for="list in categorys" :key="list">
+                    {{list}}
+                  </option>
+                  <option>사용자 추가</option>                 
+                  </select>
+              </span>
+              <span class="note-color"><i class="fas fa-palette"></i></span> 
             </div>
         </div>
-    <app-note-editor v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
+    <app-note-editor :categorylist=categorys v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
     <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i class="fas fa-plus"></i>
      </button>
     </div>
@@ -35,6 +50,7 @@ export default {
       editorOpen: false,
       notes: [
         {
+          category:'',
           nickname:'user1',
           title: 'Code',
           text: '1131111222',
@@ -42,32 +58,27 @@ export default {
           time : '',
         },
         {
+          category:'',
           nickname:'user2',
           title: 'event',
           text: 'event',
           theme: '#DDA0DD',
           time : '',
         },
-      ],      
+      ],
+      categorys:['기본','To-do List'],        
     }
   },
 	computed: {
 		
 	},
   methods: {   
-    newNote(nickname,title, text, theme,time) {
-      this.notes.push({nickname:nickname,title: title, text: text, theme: theme,time:time});
+    newNote(category,nickname,title, text, theme,time) {
+      this.notes.push({category:category,nickname:nickname,title: title, text: text, theme: theme,time:time});
       this.editorOpen = false;
     },
     deleteNote(index) {
       this.notes.splice(index, 1)
-    },
-    reviseNote(){
-
-    },
-    colorNote(index){
-      this.notes.slice(index,1)
-      
     }
 
   },
