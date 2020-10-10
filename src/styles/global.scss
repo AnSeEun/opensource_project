@@ -178,12 +178,6 @@ textarea {
     color: #7a6a6e;
     opacity: 0.6;
     transition: 0.2s;
-
-    &:hover {
-      opacity: 1;
-      // background-color: #7a6a6e;
-      color: #7a6a6e;
-    }
   }
 
   div span span::selection {
@@ -265,10 +259,10 @@ textarea {
   opacity: 0.6;
   transition: 0.2s;
 
-  &:hover {
-    opacity: 1;
-    color: #654b52;
-  }
+  // &:hover {
+  //   opacity: 1;
+  //   color: #654b52;
+  // }
 }
 
 .note-editor-bottom {
