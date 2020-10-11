@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-   <div class="header">  
-     <img src="./assets/hellos_logo.png" />
+    <div class="header">
+      <img src="./assets/hellos_logo.png" />
     <p><a href="javascript:location.reload()">Note Knock</a></p>
     <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
    </div>

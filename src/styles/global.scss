@@ -305,6 +305,7 @@ textarea {
   height: 30px;
   outline-color: #eb9f9f;
   border-color: #654b52;
+  border-radius: 3px;
   color: #654b52;
   font-weight: bold;
   box-shadow: 2px 0 4px rgba(126, 83, 83, 0.05),
@@ -394,7 +395,7 @@ textarea {
     color: #654b52;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     width: 70px;
     height: 30px;
     background-color: #eb9f9f;
