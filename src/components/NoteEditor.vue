@@ -27,25 +27,24 @@ export default {
             title: '',            
             theme: '#F4CCCC',            
             text: '',
-            time : moment().format('YYYY-MM-DD ddd')
+            time : moment().format('YYYY-MM-DD ddd'),
+            is_show: false,
         }
-    },  
+    },
     props:['categorylist'], 
     methods: {        
         createNew() {
-            this.$emit('noteAdded',this.category,this.nickname, this.title, this.text, this.theme,this.time);
+            this.$emit('noteAdded',this.category,this.nickname, this.title, this.text, this.theme,this.time, this.is_show);
             this.category='기본'
             this.nickname = 'user';
             this.title = '';
             this.text = '',
             this.theme = '#F4CCCC';
-            this.time= moment().format('YYYY-MM-DD ddd')   
+            this.time= moment().format('YYYY-MM-DD ddd');
+            this.is_show= false;
         },
         deleteNote(index) {
             this.$emit('noteDeleted', index);
-        },
-        colorNote(index) {
-            this.$emit('noteColor', index);
         },
     },
 }

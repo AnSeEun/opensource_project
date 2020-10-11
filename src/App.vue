@@ -28,7 +28,7 @@
               <textarea class="note-textarea" rows="9" onclick="this.selec()" v-model="note.text" placeholder="Take a note..."></textarea>
               <hr/> 
               <span><span class="textform-B">B</span><span class="textform-U">U</span><span class="textform-I">I</span></span>
-              <span class="categoryform">
+              <span class="category-form">
                  <select v-model="note.category">
                   <option v-for="list in categorys" :key="list">
                     {{list}}
@@ -36,7 +36,16 @@
                   <option>사용자 추가</option>                 
                   </select>
               </span>
-              <span class="note-color"><i class="fas fa-palette"></i></span> 
+              <span class="note-color" @click="modalColor(index)"><i class="fas fa-palette"></i></span>
+                <div class="note-colorform" v-show="notes[index].is_show">
+                  <ul>
+                    <li class="color1" @click="setNoteColor(index, colors[0])"></li>
+                    <li class="color2" @click="setNoteColor(index, colors[1])"></li>
+                    <li class="color3" @click="setNoteColor(index, colors[2])"></li>
+                    <li class="color4" @click="setNoteColor(index, colors[3])"></li>
+                    <li class="color5" @click="setNoteColor(index, colors[4])"></li>
+                  </ul>
+                </div>
             </div>
         </div>
     <app-note-editor :categorylist=categorys v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
@@ -63,6 +72,7 @@ export default {
           text: '1131111222',
           theme: '#FF8A80',
           time : '',
+          is_show: false,
         },
         {
           category:'',
@@ -71,17 +81,21 @@ export default {
           text: 'event',
           theme: '#DDA0DD',
           time : '',
+          is_show: false,
         },
       ],
-      categorys:['기본','To-do List'],        
+      categorys:['기본','To-do List'],
+      colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],    
     }
   },
+
 	computed: {
 		
-	},
+  },
+  
   methods: {   
-    newNote(category,nickname,title, text, theme,time) {
-      this.notes.push({category:category,nickname:nickname,title: title, text: text, theme: theme,time:time});
+    newNote(category,nickname,title, text, theme,time,is_show) {
+      this.notes.push({category:category,nickname:nickname,title: title, text: text, theme: theme,time:time,is_show:is_show});
       this.editorOpen = false;
     },
     deleteNote(index) {
@@ -91,12 +105,25 @@ export default {
       return this.notes.filter(function(note){
           return note.category == category || category==''
       })
-    }
-
+    },
+    setNoteColor: function(index, color) {
+      this.notes[index].is_show = !this.notes[index].is_show;
+      this.notes[index].theme = color;
+      // console.log(color);
+      // ("note-colorform").click(function(){
+      //   ("note-colorform").fadeIn();
+      // });
+    },
+    modalColor: function(index) {
+      this.notes[index].is_show = !this.notes[index].is_show;
+      // console.log(index, this.notes[index].is_show);
+    },
   },
+
   mounted() {
     if (localStorage.getItem('notes')) this.notes = JSON.parse(localStorage.getItem('notes'));
   },
+
   watch: {
     notes: {
       handler() {
@@ -106,6 +133,7 @@ export default {
       deep: true,
     },
   },
+
   components: {
    appNoteEditor: NoteEditor
   }
