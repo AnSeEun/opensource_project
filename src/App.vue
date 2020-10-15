@@ -13,12 +13,11 @@
               </option>                 
      </select>
   </div>
-  <div class="search-filter">
-    <input type="text">
-    <button type="submit">검색</button>
+  <div>
+      <SearchNote @noteSearched="searchNote"></SearchNote>
   </div>
     <div class="noteContainer">
-        <div v-for="(note, index) in notesFilter(selected)" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
+        <div v-for="(note, index) in notesFilter(selected,search)" :key="`note-${index}`" class="note" :style="{'background-color': note.theme,}">
             <div>
               <span class="favorites"><i class="far fa-star"></i></span>
               <span class="delete" @click.prevent="deleteNote(index)"><i class="fas fa-times"></i></span> 
@@ -57,6 +56,7 @@
 
 <script>
 import NoteEditor from './components/NoteEditor.vue';
+import NoteSearch from './components/Search.vue';
 
 export default {
   name: 'App',
@@ -64,6 +64,7 @@ export default {
     return {
       editorOpen: false,
       selected:'',
+      search:'',
       notes: [
         {
           category:'',
@@ -101,9 +102,9 @@ export default {
     deleteNote(index) {
       this.notes.splice(index, 1)
     },
-    notesFilter: function(category){
+    notesFilter: function(category,search){
       return this.notes.filter(function(note){
-          return note.category == category || category==''
+          return (note.category == category || category=='') && (note.text.includes(search) || note.title.includes(search) ||search=='')
       })
     },
     setNoteColor: function(index, color) {
@@ -118,6 +119,9 @@ export default {
       this.notes[index].is_show = !this.notes[index].is_show;
       // console.log(index, this.notes[index].is_show);
     },
+    searchNote(search){
+      this.search = search;
+    }
   },
 
   mounted() {
@@ -135,7 +139,8 @@ export default {
   },
 
   components: {
-   appNoteEditor: NoteEditor
+   appNoteEditor: NoteEditor,
+   SearchNote: NoteSearch
   }
 }
 </script>
