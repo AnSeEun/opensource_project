@@ -12,7 +12,16 @@
                 {{list}}
               </option>                 
      </select>
+     <button @click="categorylist = !categorylist">카테고리 수정</button>
+     <div class="noteCategory" v-if="categorylist">
+      <div v-for="(list,index) in categorys" :key="`list-${index}`" class="category" :style="{'background-color': '#fff0f0'}">
+        {{list}}    
+       <span v-if="index>1" @click.prevent="deleteCategory(index)"><i class="fas fa-times"></i></span> 
+     </div>
+      <categoryadd  @categoryAdd="addCategory" @categoryDeleted="deleteCategory"></categoryadd>
+    </div>
   </div>
+
   <div>
       <SearchNote @noteSearched="searchNote"></SearchNote>
   </div>
@@ -34,7 +43,7 @@
                   </option>                
                   </select>
               </span>
-              <categoryadd v-if="note.category==='사용자 추가'" @categoryAdd="addCategory"></categoryadd>
+            
               <span class="note-color" @click="modalColor(index)"><i class="fas fa-palette"></i></span>
                 <div class="note-colorform" v-show="notes[index].is_show">
                   <ul>
@@ -56,6 +65,7 @@
 <script>
 import NoteEditor from './components/NoteEditor.vue';
 import NoteSearch from './components/Search.vue';
+import categoryadd from './components/CategoryAdd.vue';
 
 export default {
   name: 'App',
@@ -64,6 +74,7 @@ export default {
       editorOpen: false,
       selected:'',
       search:'',
+      categorylist: false,
       notes: [
         {
           category:'',
@@ -120,6 +131,13 @@ export default {
     },
     searchNote(search){
       this.search = search;
+    },
+    addCategory(category, index){
+      this.categorys.push(category);
+      this.notes[index].category = category;
+    },
+    deleteCategory(index){
+      this.categorys.splice(index, 1)
     }
   },
 
@@ -131,18 +149,23 @@ export default {
   watch: {
     notes: {
       handler() {
-        var newNotes = this.notes;
-        var addCategorys = this.categorys;
+        var newNotes = this.notes;    
         localStorage.setItem('notes', JSON.stringify(newNotes));
-        localStorage.setItem('categorys', JSON.stringify(addCategorys));
       },
       deep: true,
+    },
+    categorys:{
+      handler(){
+        var addCategorys = this.categorys;
+        localStorage.setItem('categorys', JSON.stringify(addCategorys));
+      }
     },
   },
 
   components: {
    appNoteEditor: NoteEditor,
-   SearchNote: NoteSearch
+   SearchNote: NoteSearch,
+   categoryadd:categoryadd
   }
 }
 </script>
