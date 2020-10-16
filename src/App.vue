@@ -31,10 +31,10 @@
                  <select v-model="note.category">
                   <option v-for="list in categorys" :key="list">
                     {{list}}
-                  </option>
-                  <option>사용자 추가</option>                 
+                  </option>                
                   </select>
               </span>
+              <categoryadd v-if="note.category==='사용자 추가'" @categoryAdd="addCategory"></categoryadd>
               <span class="note-color" @click="modalColor(index)"><i class="fas fa-palette"></i></span>
                 <div class="note-colorform" v-show="notes[index].is_show">
                   <ul>
@@ -48,8 +48,7 @@
             </div>
         </div>
     <app-note-editor :categorylist=categorys v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
-    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i id="plus" class="fas fa-plus"></i>
-     </button>
+    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i id="plus" class="fas fa-plus"></i></button>
     </div>
   </div>
 </template>
@@ -126,13 +125,16 @@ export default {
 
   mounted() {
     if (localStorage.getItem('notes')) this.notes = JSON.parse(localStorage.getItem('notes'));
+    if (localStorage.getItem('categorys')) this.categorys = JSON.parse(localStorage.getItem('categorys'));
   },
 
   watch: {
     notes: {
       handler() {
         var newNotes = this.notes;
+        var addCategorys = this.categorys;
         localStorage.setItem('notes', JSON.stringify(newNotes));
+        localStorage.setItem('categorys', JSON.stringify(addCategorys));
       },
       deep: true,
     },
