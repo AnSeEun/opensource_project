@@ -51,6 +51,7 @@ export default {
         },
         addCategory(category){
          this.categorylist.push(category)
+         this.category = category
         }
     },
     components: {

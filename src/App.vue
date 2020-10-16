@@ -31,8 +31,7 @@
                  <select v-model="note.category">
                   <option v-for="list in categorys" :key="list">
                     {{list}}
-                  </option>
-                  <option>사용자 추가</option>                 
+                  </option>                
                   </select>
               </span>
               <categoryadd v-if="note.category==='사용자 추가'" @categoryAdd="addCategory"></categoryadd>
@@ -57,7 +56,6 @@
 <script>
 import NoteEditor from './components/NoteEditor.vue';
 import NoteSearch from './components/Search.vue';
-import categoryadd from './components/CategoryAdd.vue';
 
 export default {
   name: 'App',
@@ -122,9 +120,6 @@ export default {
     },
     searchNote(search){
       this.search = search;
-    },
-    addCategory(category){
-      this.categorys.push(category)
     }
   },
 
@@ -147,8 +142,7 @@ export default {
 
   components: {
    appNoteEditor: NoteEditor,
-   SearchNote: NoteSearch,
-   categoryadd:categoryadd
+   SearchNote: NoteSearch
   }
 }
 </script>
