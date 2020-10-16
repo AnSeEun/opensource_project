@@ -9,6 +9,7 @@
                 </option>
                   <option>사용자 추가</option>                 
             </select>
+            <categoryadd v-if="category==='사용자 추가'" @categoryAdd="addCategory"></categoryadd>
             <textarea rows="10" v-model="text" placeholder="Take a note..."></textarea>            
             <div class="note-editor-bottom">
                 <button @click=createNew class="fas fas-check-circle"><i class="fas fa-check-circle"></i></button>
@@ -19,6 +20,8 @@
 
 <script>
 import moment from 'moment'
+import categoryadd from './CategoryAdd.vue';
+
 export default {
     data: function() {
         return {
@@ -46,6 +49,12 @@ export default {
         deleteNote(index) {
             this.$emit('noteDeleted', index);
         },
+        addCategory(category){
+         this.categorylist.push(category)
+        }
     },
+    components: {
+        categoryadd:categoryadd
+    }
 }
 </script>

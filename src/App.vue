@@ -35,6 +35,7 @@
                   <option>사용자 추가</option>                 
                   </select>
               </span>
+              <categoryadd v-if="note.category==='사용자 추가'" @categoryAdd="addCategory"></categoryadd>
               <span class="note-color" @click="modalColor(index)"><i class="fas fa-palette"></i></span>
                 <div class="note-colorform" v-show="notes[index].is_show">
                   <ul>
@@ -48,8 +49,7 @@
             </div>
         </div>
     <app-note-editor :categorylist=categorys v-if="editorOpen" @noteAdded="newNote" @noteDeleted="deleteNote"></app-note-editor>
-    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i id="plus" class="fas fa-plus"></i>
-     </button>
+    <button class="add-btn" @click.prevent="editorOpen = !editorOpen"><i id="plus" class="fas fa-plus"></i></button>
     </div>
   </div>
 </template>
@@ -57,6 +57,7 @@
 <script>
 import NoteEditor from './components/NoteEditor.vue';
 import NoteSearch from './components/Search.vue';
+import categoryadd from './components/CategoryAdd.vue';
 
 export default {
   name: 'App',
@@ -121,18 +122,24 @@ export default {
     },
     searchNote(search){
       this.search = search;
+    },
+    addCategory(category){
+      this.categorys.push(category)
     }
   },
 
   mounted() {
     if (localStorage.getItem('notes')) this.notes = JSON.parse(localStorage.getItem('notes'));
+    if (localStorage.getItem('categorys')) this.categorys = JSON.parse(localStorage.getItem('categorys'));
   },
 
   watch: {
     notes: {
       handler() {
         var newNotes = this.notes;
+        var addCategorys = this.categorys;
         localStorage.setItem('notes', JSON.stringify(newNotes));
+        localStorage.setItem('categorys', JSON.stringify(addCategorys));
       },
       deep: true,
     },
@@ -140,7 +147,8 @@ export default {
 
   components: {
    appNoteEditor: NoteEditor,
-   SearchNote: NoteSearch
+   SearchNote: NoteSearch,
+   categoryadd:categoryadd
   }
 }
 </script>
