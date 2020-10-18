@@ -293,6 +293,118 @@ textarea {
   font-style: italic;
 }
 
+// .noteCatrgory {
+//   position: absolute;
+//   top: 0px;
+//   width: 100px;
+//   background-color: #654b52;
+// }
+
+.category-modal-form {
+  background-color: #654b52;
+  display: inline-block;
+}
+
+.category {
+  margin: 10px;
+  display: inline-flex;
+  font-weight: bold;
+  color: #654b52;
+}
+
+.category-edit {
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #654b52;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #eb9f9f;
+  outline: none;
+  transition: 0.3s;
+
+  &:active {
+    background-color: #f4cccc;
+  }
+}
+
+.category-modal-cancle {
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #654b52;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 70px;
+  height: 30px;
+  background-color: #eb9f9f;
+  outline: none;
+  transition: 0.3s;
+
+  &:active {
+    background-color: #f4cccc;
+  }
+}
+
+.category-modal-add {
+  cursor: pointer;
+  font-family: "Noto Sans KR", sans-serif;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #654b52;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 70px;
+  height: 30px;
+  background-color: #eb9f9f;
+  outline: none;
+  transition: 0.3s;
+
+  &:active {
+    background-color: #f4cccc;
+  }
+}
+
+// .category-modal {
+//   display: none;
+//   position: relative;
+//   width: 100%;
+//   height: 100%;
+//   z-index: 1;
+// }
+
+.category-modal-content {
+  position: fixed;
+  left: 50%;
+  top: 20%;
+  width: 500px;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  margin: 100px auto;
+  padding: 20px 30px;
+  background: #f4cccc;
+  border: 1px solid #7a6a6e;
+  z-index: 3;
+}
+
+.category-modal-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
 .category-form {
   position: absolute;
   right: 50px;
