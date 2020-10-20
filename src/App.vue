@@ -12,7 +12,7 @@
           {{ list }}
         </option>
       </select>
-      <button class="category-edit" @click="modalCategory()">카테고리 수정</button>
+      <button class="category-edit" @click="modalCategory()" @click.prevent="categoryMain = true">카테고리 수정</button>
 
       <div v-if="categorylist">
         <div >
@@ -27,7 +27,7 @@
                 <i class="fas fa-times"></i>
               </span>
             </div>
-            <categoryadd
+            <categoryadd :main=categoryMain
               @categoryAdd="addCategory"
               @categoryDeleted="deleteCategory"
               @categoryCancle="modalCategory"
@@ -129,6 +129,7 @@ export default {
       selected: "",
       search: "",
       categorylist: false,
+      categoryMain: false,
       notes: [
         {
           category: "",
