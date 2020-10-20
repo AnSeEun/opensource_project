@@ -5,12 +5,13 @@
       v-model="category"
       placeholder="category"
     />
-    <button class="category-modal-add" @click.prevent="createNew">
+    <button class="category-modal-add" v-if="category!=''" @click.prevent="addCategory">
       추가
     </button>
-    <button class="category-modal-cancle" @click.prevent="categoryCancle">
+    <button class="category-modal-cancle" v-if="main" @click.prevent="categoryCancle">
       취소
     </button>
+  
   </div>
 </template>
 
@@ -21,12 +22,13 @@ export default {
       category: "",
     };
   },
+  props:['main'],
   methods: {
-    createNew() {
+    addCategory() {
       this.$emit("categoryAdd", this.category);
       this.category = "";
     },
-    deleteNote(index) {
+    deleteCategory(index) {
       this.$emit("categoryDeleted", index);
     },
     categoryCancle() {
