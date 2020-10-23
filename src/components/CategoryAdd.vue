@@ -1,17 +1,19 @@
 <template>
   <div class="categoryAdd" style="text-align:center;">
-    <input
-      type="text"
-      v-model="category"
-      placeholder="category"
-    />
-    <button class="category-modal-add" v-if="category!=''" @click.prevent="addCategory">
+    <input class="category-modal-input" type="text" v-model="category" placeholder="category" />
+    <button
+      class="category-modal-add"
+      @click.prevent="addCategory"
+    >
       추가
     </button>
-    <button class="category-modal-cancle" v-if="main" @click.prevent="categoryCancle">
+    <button
+      class="category-modal-cancle"
+      v-if="main"
+      @click.prevent="categoryCancle"
+    >
       취소
     </button>
-  
   </div>
 </template>
 
@@ -22,7 +24,7 @@ export default {
       category: "",
     };
   },
-  props:['main'],
+  props: ["main"],
   methods: {
     addCategory() {
       this.$emit("categoryAdd", this.category);

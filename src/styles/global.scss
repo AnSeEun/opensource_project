@@ -15,6 +15,7 @@ body {
   font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   margin: 0;
+  // width: 100%;
 }
 
 ::placeholder {
@@ -79,15 +80,11 @@ textarea {
   cursor: default;
 }
 
-// select {
-//   background-color: rgba(235, 235, 235, 0.4);
-//   color: #654b52;
-//   outline: none;
-//   border-radius: 4px;
-//   transition: 0.2s;
+// table {
+//   table-layout: fixed;
 
-//   &:hover {
-//     background-color: rgba(255, 242, 204, 0.8);
+//   tr {
+//     width: 25%;
 //   }
 // }
 
@@ -106,6 +103,11 @@ textarea {
   border-radius: 500px;
 }
 
+.part-line {
+  margin: 0px;
+  background-color: #ccc;
+}
+
 .title-view {
   font-family: "Noto Sans KR", sans-serif;
   color: #fff;
@@ -119,18 +121,34 @@ textarea {
   outline: none;
 }
 
-.title-input {
+.title-input,
+.title-input-user {
+  color: #654b52;
+  background-color: #f4cccc;
   padding: 10px;
   border: none;
   outline: none;
+  font-size: 15px;
+  margin-top: 0px;
+}
+
+.title-input {
+  padding-left: 8px;
+}
+
+.title-input-user {
+  padding-top: 0px;
 }
 
 .title-input::placeholder {
+  color: #654b52;
   font-size: 18px;
+  font-weight: bold;
 }
 
 .add-btn {
-  padding: 100px 123px;
+  margin-left: 25px;
+  padding: 50px 130px;
   border: none;
   background-color: #fff;
   color: #eb9f9f;
@@ -139,30 +157,53 @@ textarea {
   cursor: pointer;
 }
 
+.testdiv {
+  display: inline;
+}
+
+.note-grid {
+  display: inline-block;
+  position: relative;
+  margin-left: 25px;
+  margin-top: 12px;
+}
+
 .note-editor {
   font-family: "Noto Sans KR", sans-serif;
-  max-width: 300px;
+  width: 300px;
   height: 300px;
-  margin: 0px 0px 30px 25px;
+  margin-left: 35px;
+  margin-right: 0px;
+  margin-top: 10px;
+  margin-bottom: 25px;
   // margin: 10px 0px 10px 0px;
+  // display: inline-block;
+  top: 0px;
   display: flex;
   flex-direction: column;
   background: #fff;
   padding: 16px;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   border-radius: 3px;
+  background-color: #f4cccc;
 
   textarea {
     font-family: "Noto Sans KR", sans-serif;
     padding: 15px 10px 10px 10px;
     resize: none;
     border: none;
+    background-color: #f4cccc;
+
     &:hover {
       outline: 0;
     }
     &:focus {
       outline: 0;
     }
+  }
+
+  textarea::placeholder {
+    color: #7a6a6e;
   }
 
   select {
@@ -195,10 +236,11 @@ textarea {
 .noteContainer {
   column-count: 4;
   column-gap: 1em;
-  margin: 30px 25px 10px 25px;
+  margin: 10px 0px 10px 0px;
   height: auto;
+  width: 100%;
+  display: table;
   // cursor: default;
-  // overflow-x: auto;
 
   div span span {
     padding: 0px 5px;
@@ -227,12 +269,11 @@ textarea {
     0 4px 4px rgba(126, 83, 83, 0.05), 0 8px 8px rgba(126, 83, 83, 0.05),
     0 16px 16px rgba(126, 83, 83, 0.05);
   box-sizing: border-box;
-  position: relative;
-  display: flex;
+  display: inline;
   flex-direction: column;
   display: inline-block;
   // margin: 1em 1em 1em 2em;
-  margin: 0px 0px 30px 25px;
+  margin: 0px 0px 30px 60px;
   //width: 100%;
   width: 300px;
   height: 300px;
@@ -346,7 +387,7 @@ textarea {
   transition: 0.3s;
 
   &:active {
-    background-color: #f4cccc;
+    opacity: 0.7;
   }
 }
 
@@ -366,8 +407,13 @@ textarea {
   transition: 0.3s;
 
   &:active {
-    background-color: #f4cccc;
+    opacity: 0.7;
   }
+}
+
+.category-modal-input {
+  outline: none;
+  border: #ee8484 2px solid;
 }
 
 // .category-modal {
@@ -527,6 +573,27 @@ textarea {
   flex-direction: row-reverse;
   align-items: flex-end;
   flex-wrap: wrap;
+
+  button {
+    background-color: #fff;
+    border: 0.5px solid #7a6a6e;
+    border-radius: 3px;
+    opacity: 0.8;
+    transition: 0.3s;
+
+    &:hover {
+      opacity: 1;
+      outline-color: #eb9f9f;
+    }
+
+    &:after {
+      outline: note;
+    }
+  }
+
+  i {
+    color: #654b52;
+  }
 }
 
 .delete {
@@ -544,6 +611,13 @@ textarea {
   }
 }
 
+.note-favorite {
+  padding-top: 20px;
+  padding-bottom: 4px;
+  margin-bottom: 0px;
+  width: 100%;
+}
+
 .favorites {
   // position: absolute;
   // top: 4px;
@@ -557,6 +631,27 @@ textarea {
     // opacity: 1;
     color: #654b52;
   }
+}
+
+// .favorite-part,
+// .note-part {
+//   font-family: "Bauhaus 93", "Courier New", sans-serif;
+//   font-size: 30px;
+//   font-weight: bold;
+//   text-shadow: -2px 0 rgb(235, 159, 159), 0 1px rgb(235, 159, 159),
+//     1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159);
+//   font-weight: bold;
+//   display: block;
+//   margin-top: 15px;
+//   margin-left: 30px;
+//   color: #fff;
+// }
+
+// .favorite-part {
+// }
+
+.note-part {
+  margin-bottom: 30px;
 }
 
 #plus {

@@ -12,10 +12,16 @@
           {{ list }}
         </option>
       </select>
-      <button class="category-edit" @click="modalCategory()" @click.prevent="categoryMain = true">카테고리 수정</button>
+      <button
+        class="category-edit"
+        @click="modalCategory()"
+        @click.prevent="categoryMain = true"
+      >
+        카테고리 수정
+      </button>
 
       <div v-if="categorylist">
-        <div >
+        <div>
           <div class="category-modal-content">
             <div
               v-for="(list, index) in categorys"
@@ -27,7 +33,8 @@
                 <i class="fas fa-times"></i>
               </span>
             </div>
-            <categoryadd :main=categoryMain
+            <categoryadd
+              :main="categoryMain"
               @categoryAdd="addCategory"
               @categoryDeleted="deleteCategory"
               @categoryCancle="modalCategory"
@@ -41,15 +48,103 @@
     <div>
       <SearchNote @noteSearched="searchNote"></SearchNote>
     </div>
-    <div class="noteContainer">
-      <div
+
+    <table class="noteContainer">
+      <!--favorite note-->
+      <!-- <div class="favorite-part">Favorites</div> -->
+      <div class="note-favorite">
+        <tr
+          v-for="(note, index) in notesFilter(selected, search)"
+          v-show="note.favorite"
+          :key="`note-${index}`"
+          class="note"
+          :style="{ 'background-color': note.theme }"
+        >
+          <div>
+            <span class="favorites">
+              <!-- <i
+                class="far fa-star"
+                @click="addFavorite(index)"
+                v-if="!notes[index].favorite"
+              ></i> -->
+              <i
+                class="fas fa-star"
+                @click="deleteFavorite(index)"
+              ></i>
+            </span>
+            <span class="note-date-span">
+              <font class="note-date" size="2em" color="#FFFFFF">
+                {{ note.time }}
+                <u>
+                  <i>By {{ note.nickname }}</i>
+                </u>
+              </font>
+            </span>
+            <input
+              class="title-view"
+              type="text"
+              v-model="note.title"
+              placeholder="Title"
+            />
+            <p />
+            <textarea
+              class="note-textarea"
+              rows="9"
+              onclick="this.selec()"
+              v-model="note.text"
+              placeholder="Take a note..."
+            ></textarea>
+            <hr />
+            <span>
+              <span class="textform-B">B</span><span class="textform-U">U</span>
+              <span class="textform-I">I</span>
+            </span>
+            <span class="category-form">
+              <select v-model="note.category">
+                <option v-for="list in categorys" :key="list">
+                  {{ list }}
+                </option>
+              </select>
+            </span>
+
+            <span class="note-color" @click="modalColor(index)">
+              <i class="fas fa-palette"></i>
+            </span>
+            <div class="note-colorform" v-show="notes[index].is_show">
+              <ul>
+                <li class="color1" @click="setNoteColor(index, colors[0])"></li>
+                <li class="color2" @click="setNoteColor(index, colors[1])"></li>
+                <li class="color3" @click="setNoteColor(index, colors[2])"></li>
+                <li class="color4" @click="setNoteColor(index, colors[3])"></li>
+                <li class="color5" @click="setNoteColor(index, colors[4])"></li>
+              </ul>
+            </div>
+          </div>
+        </tr>
+      </div>
+
+      <hr class="part-line">
+      <!--notes-->
+      <div class="note-part"></div>
+      <tr
         v-for="(note, index) in notesFilter(selected, search)"
+        v-show="!note.favorite"
         :key="`note-${index}`"
         class="note"
         :style="{ 'background-color': note.theme }"
       >
         <div>
-          <span class="favorites"><i class="far fa-star"></i></span>
+          <span class="favorites">
+            <i
+              class="far fa-star"
+              @click="addFavorite(index)"
+            ></i>
+            <!-- <i
+              class="fas fa-star"
+              @click="deleteFavorite(index)"
+              v-if="notes[index].favorite"
+            ></i> -->
+          </span>
           <span class="delete" @click.prevent="deleteNote(index)">
             <i class="fas fa-times"></i>
           </span>
@@ -101,7 +196,9 @@
             </ul>
           </div>
         </div>
-      </div>
+      </tr>
+      <!-- <div class="testdiv">하이</div> -->
+
       <app-note-editor
         :categorylist="categorys"
         v-if="editorOpen"
@@ -109,10 +206,11 @@
         @noteDeleted="deleteNote"
       >
       </app-note-editor>
+
       <button class="add-btn" @click.prevent="editorOpen = !editorOpen">
         <i id="plus" class="fas fa-plus"></i>
       </button>
-    </div>
+    </table>
   </div>
 </template>
 
@@ -128,6 +226,7 @@ export default {
       editorOpen: false,
       selected: "",
       search: "",
+      is_search: false,
       categorylist: false,
       categoryMain: false,
       notes: [
@@ -138,6 +237,7 @@ export default {
           text: "1131111222",
           theme: "#FF8A80",
           time: "",
+          favorite: false,
           is_show: false,
         },
         {
@@ -147,18 +247,20 @@ export default {
           text: "event",
           theme: "#DDA0DD",
           time: "",
+          favorite: false,
           is_show: false,
         },
       ],
       categorys: ["기본", "To-do List"],
       colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],
+      // favorites: [],
     };
   },
 
   computed: {},
 
   methods: {
-    newNote(category, nickname, title, text, theme, time, is_show) {
+    newNote(category, nickname, title, text, theme, time, favorite, is_show) {
       this.notes.push({
         category: category,
         nickname: nickname,
@@ -166,6 +268,7 @@ export default {
         text: text,
         theme: theme,
         time: time,
+        favorite: favorite,
         is_show: is_show,
       });
       this.editorOpen = false;
@@ -186,17 +289,13 @@ export default {
     setNoteColor: function(index, color) {
       this.notes[index].is_show = !this.notes[index].is_show;
       this.notes[index].theme = color;
-      // console.log(color);
-      // ("note-colorform").click(function(){
-      //   ("note-colorform").fadeIn();
-      // });
     },
     modalColor: function(index) {
       this.notes[index].is_show = !this.notes[index].is_show;
-      // console.log(index, this.notes[index].is_show);
     },
     searchNote(search) {
       this.search = search;
+      this.is_search = true;
     },
     addCategory(category, index) {
       this.categorys.push(category);
@@ -208,6 +307,24 @@ export default {
     modalCategory: function() {
       this.categorylist = !this.categorylist;
     },
+    addFavorite: function(index) {
+      this.notes[index].favorite = true;
+      // console.log(index, this.notes[index].favorite_cnt);
+    },
+    deleteFavorite: function(index) {
+      this.notes[index].favorite = false;
+      // console.log(index, this.notes[index].favorite);
+    },
+    // setFavorites: function(category, search) {
+    //   return this.notes.filter(function(note) {
+    //     return (
+    //       (note.category == category || category == "") &&
+    //       (note.text.includes(search) ||
+    //         note.title.includes(search) ||
+    //         search == "")
+    //     );
+    //   });
+    // },
   },
 
   mounted() {
