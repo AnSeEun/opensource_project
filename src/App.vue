@@ -67,10 +67,10 @@
                 @click="addFavorite(index)"
                 v-if="!notes[index].favorite"
               ></i> -->
-              <i
-                class="fas fa-star"
-                @click="deleteFavorite(index)"
-              ></i>
+              <i class="fas fa-star" @click="deleteFavorite(index)"></i>
+            </span>
+            <span class="delete" @click.prevent="deleteNote(index)">
+              <i class="fas fa-times"></i>
             </span>
             <span class="note-date-span">
               <font class="note-date" size="2em" color="#FFFFFF">
@@ -96,8 +96,9 @@
             ></textarea>
             <hr />
             <span>
-              <span class="textform-B">B</span><span class="textform-U">U</span>
-              <span class="textform-I">I</span>
+              <span class="textform-B" @click="setBold(index)">B</span>
+              <span class="textform-U" @click="setUnderbar(index)">U</span>
+              <span class="textform-I" @click="setInclination(index)">I</span>
             </span>
             <span class="category-form">
               <select v-model="note.category">
@@ -123,7 +124,7 @@
         </tr>
       </div>
 
-      <hr class="part-line">
+      <hr class="part-line" />
       <!--notes-->
       <div class="note-part"></div>
       <tr
@@ -135,10 +136,7 @@
       >
         <div>
           <span class="favorites">
-            <i
-              class="far fa-star"
-              @click="addFavorite(index)"
-            ></i>
+            <i class="far fa-star" @click="addFavorite(index)"></i>
             <!-- <i
               class="fas fa-star"
               @click="deleteFavorite(index)"
@@ -172,8 +170,9 @@
           ></textarea>
           <hr />
           <span>
-            <span class="textform-B">B</span><span class="textform-U">U</span>
-            <span class="textform-I">I</span>
+            <span class="textform-B" @click="setBold(index)">B</span>
+            <span class="textform-U" @click="setUnderbar(index)">U</span>
+            <span class="textform-I" @click="setInclination(index)">I</span>
           </span>
           <span class="category-form">
             <select v-model="note.category">
@@ -207,8 +206,12 @@
       >
       </app-note-editor>
 
-      <button class="add-btn" @click.prevent="editorOpen = !editorOpen">
-        <i id="plus" class="fas fa-plus"></i>
+      <button class="add-btn">
+        <i
+          id="plus"
+          class="fas fa-plus"
+          @click.prevent="editorOpen = !editorOpen"
+        ></i>
       </button>
     </table>
   </div>
@@ -253,7 +256,9 @@ export default {
       ],
       categorys: ["기본", "To-do List"],
       colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],
-      // favorites: [],
+      boldCnt: 0,
+      underbarCnt: 0,
+      inclinationCnt: 0,
     };
   },
 
@@ -315,16 +320,37 @@ export default {
       this.notes[index].favorite = false;
       // console.log(index, this.notes[index].favorite);
     },
-    // setFavorites: function(category, search) {
-    //   return this.notes.filter(function(note) {
-    //     return (
-    //       (note.category == category || category == "") &&
-    //       (note.text.includes(search) ||
-    //         note.title.includes(search) ||
-    //         search == "")
-    //     );
-    //   });
-    // },
+    setBold: function(index) {
+      this.boldCnt++;
+      if (this.boldCnt % 2 != 0) {
+        document.getElementsByTagName("textarea")[index].style.fontWeight =
+          "bold";
+      } else if (this.boldCnt % 2 == 0) {
+        document.getElementsByTagName("textarea")[index].style.fontWeight =
+          "normal";
+      }
+      console.log(index, "bold");
+    },
+    setUnderbar: function(index) {
+      this.underbarCnt++;
+      if (this.underbarCnt % 2 != 0) {
+        document.getElementsByTagName("textarea")[index].style.textDecoration =
+          "underline";
+      } else if (this.underbarCnt % 2 == 0) {
+        document.getElementsByTagName("textarea")[index].style.textDecoration =
+          "none";
+      }
+    },
+    setInclination: function(index) {
+      this.inclinationCnt++;
+      if (this.inclinationCnt % 2 != 0) {
+        document.getElementsByTagName("textarea")[index].style.fontStyle =
+          "italic";
+      } else if (this.inclinationCnt % 2 == 0) {
+        document.getElementsByTagName("textarea")[index].style.fontStyle =
+          "normal";
+      }
+    },
   },
 
   mounted() {

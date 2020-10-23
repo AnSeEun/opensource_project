@@ -76,6 +76,7 @@ hr {
 
 input,
 textarea {
+  font-family: "Noto Sans KR", sans-serif;
   caret-color: #7a6a6e;
   cursor: default;
 }
@@ -326,6 +327,10 @@ textarea {
   font-weight: bold;
 }
 
+.textform-B {
+  font-weight: bold;
+}
+
 .textform-U {
   text-decoration: underline;
 }
@@ -367,7 +372,7 @@ textarea {
   outline: none;
   transition: 0.3s;
 
-  &:active {
+  &:hover {
     background-color: #f4cccc;
   }
 }

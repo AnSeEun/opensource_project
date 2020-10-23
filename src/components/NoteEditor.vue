@@ -66,7 +66,7 @@ export default {
         this.theme,
         this.time,
         this.favorite,
-        this.is_show
+        this.is_show,
       );
       this.category = "기본";
       this.nickname = "user";
