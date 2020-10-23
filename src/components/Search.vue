@@ -11,13 +11,15 @@
 export default {
     data: function() {
         return {
-            search:''
+            search:'',
+            is_search:false,
         }
     },
     methods: {        
         SearchNote() {
-            this.$emit('noteSearched',this.search);
+            this.$emit('noteSearched',this.search, this.is_search);
             this.search='';
+            this.is_search=false;
         },
     },
 }
