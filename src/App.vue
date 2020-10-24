@@ -87,12 +87,22 @@
               placeholder="Title"
             />
             <p />
-            <textarea
-              class="note-textarea"
-              rows="9"
-              onclick="this.selec()"
-              v-model="note.text"
-              placeholder="Take a note..."
+            <div v-if="note.category==='To-do List'" id="checkbox">                 
+            <div v-for="index in note.listCount" :key="index">
+              <input type="checkbox" id="note.Todo[index-1]" value="note.Todo[index-1]" v-model="note.checked[index-1]">
+              <label for="note.Todo[index-1]">
+                <input class="todolist" type="text" v-model="note.Todo[index-1]" placeholder="할 일"/>
+              </label>      
+            </div>
+            <i class="fas fa-plus" v-if="note.listCount<5" @click.prevent="note.listCount++">
+             </i> 
+            </div>
+            <textarea v-else
+             class="note-textarea"
+             rows="9"
+             onclick="this.selec()"
+             v-model="note.text"
+             placeholder="Take a note..."
             ></textarea>
             <hr />
             <span>
@@ -161,7 +171,17 @@
             placeholder="Title"
           />
           <p />
-          <textarea
+          <div v-if="note.category==='To-do List'" id="checkbox">                 
+            <div v-for="index in note.listCount" :key="index">
+              <input type="checkbox" id="note.Todo[index-1]" value="note.Todo[index-1]" v-model="note.checked[index-1]">
+              <label for="note.Todo[index-1]">
+                <input class="todolist" type="text" v-model="note.Todo[index-1]" placeholder="할 일"/>
+              </label>      
+            </div>
+            <i class="fas fa-plus" v-if="note.listCount<5" @click.prevent="note.listCount++">
+             </i> 
+          </div>
+          <textarea v-else
             class="note-textarea"
             rows="9"
             onclick="this.selec()"
@@ -203,6 +223,7 @@
         v-if="editorOpen"
         @noteAdded="newNote"
         @noteDeleted="deleteNote"
+        @todoList="TodoList"
       >
       </app-note-editor>
 
@@ -242,6 +263,9 @@ export default {
           time: "",
           favorite: false,
           is_show: false,
+          Todo:[],
+          checked:[],
+          listCount:1,
         },
         {
           category: "",
@@ -252,6 +276,9 @@ export default {
           time: "",
           favorite: false,
           is_show: false,
+          Todo:[],
+          checked:[],
+          listCount:1,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -265,7 +292,7 @@ export default {
   computed: {},
 
   methods: {
-    newNote(category, nickname, title, text, theme, time, favorite, is_show) {
+    newNote(category, nickname, title, text, theme, time, favorite, is_show,Todo,checked,listCount) {
       this.notes.push({
         category: category,
         nickname: nickname,
@@ -275,6 +302,9 @@ export default {
         time: time,
         favorite: favorite,
         is_show: is_show,
+        Todo: Todo,
+        checked: checked,
+        listCount: listCount,
       });
       this.editorOpen = false;
     },
