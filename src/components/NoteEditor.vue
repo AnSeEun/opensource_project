@@ -19,11 +19,21 @@
         </option>
         <option>사용자 추가</option>
       </select>
+
       <categoryadd
         v-if="category === '사용자 추가'"
         @categoryAdd="addCategory"
       ></categoryadd>
-      <textarea
+
+      <div v-if="category==='To-do List'">
+        <div v-for="index in checkBoxAdd" :key="index">
+          <TodoList @listAdd="addList"></TodoList>
+          </div>
+          <i class="fas fa-plus" v-if="checkBoxAdd<5" @click.prevent="checkBoxAdd++">
+        </i>    
+      </div>
+  
+      <textarea v-else
         rows="10"
         v-model="text"
         placeholder="Take a note..."
@@ -40,6 +50,7 @@
 <script>
 import moment from "moment";
 import categoryadd from "./CategoryAdd.vue";
+import TodoList from "./TodoList.vue";
 
 export default {
   data: function() {
@@ -52,6 +63,9 @@ export default {
       time: moment().format("YYYY-MM-DD ddd"),
       favorite: false,
       is_show: false,
+      checkBoxAdd: 0,
+      Todo:[],
+      TodoList:[], 
     };
   },
   props: ["categorylist"],
@@ -67,6 +81,9 @@ export default {
         this.time,
         this.favorite,
         this.is_show,
+        this.Todo,
+        this.TodoList,
+        this.checkBoxAdd,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -84,9 +101,14 @@ export default {
       this.category = category;
       this.categorylist = !this.categorylist;
     },
+    addList(todo,checked){
+      this.Todo.push(todo)
+      this.TodoList.push(checked);
+    }
   },
   components: {
     categoryadd: categoryadd,
+    TodoList: TodoList
   },
 };
 </script>
