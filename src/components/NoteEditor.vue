@@ -72,6 +72,8 @@ export default {
       Todo: [],
       TodoList: [],
       is_bold: false,
+      is_under: false,
+      is_incli: false,
     };
   },
   props: ["categorylist"],
@@ -90,7 +92,9 @@ export default {
         this.Todo,
         this.TodoList,
         this.checkBoxAdd,
-        this.is_bold
+        this.is_bold,
+        this.is_under,
+        this.is_incli,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -101,6 +105,8 @@ export default {
       this.favorite = false;
       this.is_show = false;
       this.is_bold = false;
+      this.is_under = false;
+      this.is_incli = false;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
