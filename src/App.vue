@@ -111,14 +111,38 @@
               >
               </i>
             </div>
-            <textarea
-              v-else
-              class="note-textarea"
-              rows="9"
-              onclick="this.selec()"
-              v-model="note.text"
-              placeholder="Take a note..."
-            ></textarea>
+             <div v-else>
+          <textarea 
+            v-if="note.is_bold" 
+            style="font-weight:bold"
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          <textarea 
+            v-else-if="note.is_under" 
+            style="text-decoration:underline"
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          <textarea 
+            v-else-if="note.is_incli" style="fontStyle:italic"
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          <textarea 
+            v-else
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          </div>
             <hr />
             <span>
               <span class="textform-B" @click="setBold(index)">B</span>
@@ -162,11 +186,6 @@
         <div>
           <span class="favorites">
             <i class="far fa-star" @click="addFavorite(index)"></i>
-            <!-- <i
-              class="fas fa-star"
-              @click="deleteFavorite(index)"
-              v-if="notes[index].favorite"
-            ></i> -->
           </span>
           <span class="delete" @click.prevent="deleteNote(index)">
             <i class="fas fa-times"></i>
@@ -210,14 +229,38 @@
             >
             </i>
           </div>
-          <textarea
-            v-else
+          <div v-else>
+          <textarea 
+            v-if="note.is_bold" 
+            style="font-weight:bold"
             class="note-textarea"
             rows="9"
-            onclick="this.selec()"
             v-model="note.text"
             placeholder="Take a note..."
           ></textarea>
+          <textarea 
+            v-else-if="note.is_under" 
+            style="text-decoration:underline"
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          <textarea 
+            v-else-if="note.is_incli" style="fontStyle:italic"
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          <textarea 
+            v-else
+            class="note-textarea"
+            rows="9"
+            v-model="note.text"
+            placeholder="Take a note..."
+          ></textarea>
+          </div>
           <hr />
           <span>
             <span class="textform-B" @click="setBold(index)">B</span>
@@ -246,7 +289,6 @@
           </div>
         </div>
       </tr>
-      <!-- <div class="testdiv">하이</div> -->
 
       <app-note-editor
         class="note-editor-container"
@@ -319,7 +361,6 @@ export default {
       ],
       categorys: ["기본", "To-do List"],
       colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],
-      // boldCnt: 0,
       underbarCnt: 0,
       inclinationCnt: 0,
     };
@@ -406,65 +447,20 @@ export default {
     setBold: function(index) {
       this.notes[index].is_bold = !this.notes[index].is_bold;
 
-      document.getElementsByTagName("textarea")[index].style.fontWeight =
-        "bold";
-      console.log("bold 적용");
-
-      console.log(index, "bold", this.is_bold);
+      
     },
     setUnderbar: function(index) {
       this.notes[index].is_under = !this.notes[index].is_under;
-
-      document.getElementsByTagName("textarea")[index].style.textDecoration =
-        "underline";
-      console.log("underline 적용");
-
-      console.log(index, "underline", this.is_under);
     },
     setInclination: function(index) {
       this.notes[index].is_incli = !this.notes[index].is_incli;
-
-      document.getElementsByTagName("textarea")[index].style.fontStyle =
-        "italic";
-      console.log("italic 적용");
-
-      console.log(index, "italic", this.is_incli);
     },
-    // unsetBold: function(index) {
-    //   this.is_bold = false;
-
-    //   if(this.is_bold == true) {
-    //     document.getElementsByTagName("textarea")[index].style.fontWeight =
-    //       "bold";
-    //     console.log("bold 적용");
-    //   }
-    //   console.log(index, "bold", this.is_bold);
-    // },
-    // setUnderbar: function(index) {
-    //   this.underbarCnt++;
-    //   if (this.underbarCnt % 2 != 0) {
-    //     document.getElementsByTagName("textarea")[index].style.textDecoration =
-    //       "underline";
-    //   } else if (this.underbarCnt % 2 == 0) {
-    //     document.getElementsByTagName("textarea")[index].style.textDecoration =
-    //       "none";
-    //   }
-    // },
-    // setInclination: function(index) {
-    //   this.inclinationCnt++;
-    //   if (this.inclinationCnt % 2 != 0) {
-    //     document.getElementsByTagName("textarea")[index].style.fontStyle =
-    //       "italic";
-    //   } else if (this.inclinationCnt % 2 == 0) {
-    //     document.getElementsByTagName("textarea")[index].style.fontStyle =
-    //       "normal";
-    //   }
-    // },
   },
 
   mounted() {
-    if (localStorage.getItem("notes"))
+    if (localStorage.getItem("notes")){
       this.notes = JSON.parse(localStorage.getItem("notes"));
+    }
     if (localStorage.getItem("categorys"))
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
   },
