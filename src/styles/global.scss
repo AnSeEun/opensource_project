@@ -117,8 +117,8 @@ textarea {
 .title-view {
   font-family: "Noto Sans KR", sans-serif;
   color: #fff;
-  text-shadow: -1px 0 rgb(235, 159, 159), 0 2px rgb(235, 159, 159),
-    1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159);
+  text-shadow: -1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159),
+    1px 0 rgb(235, 159, 159), 0 1px rgb(235, 159, 159);
   font-weight: bold;
   font-size: large;
   padding: 0px;
@@ -130,7 +130,7 @@ textarea {
 .title-input,
 .title-input-user {
   color: #654b52;
-  background-color:#F2F2F2;
+  background-color: #f4cccc;
   padding: 10px;
   border: none;
   outline: none;
@@ -152,8 +152,7 @@ textarea {
   font-weight: bold;
 }
 
-
-.todolist{
+.todolist {
   font-family: "Noto Sans KR", sans-serif;
   color: #654b52;
   padding: 5px;
@@ -163,7 +162,7 @@ textarea {
   outline: none;
 }
 
-.todolist-edit{
+.todolist-edit {
   font-family: "Noto Sans KR", sans-serif;
   color: #654b52;
   padding: 5px;
@@ -174,7 +173,7 @@ textarea {
   outline: none;
 }
 
-.check{
+.check {
   cursor: pointer;
   position: relative;
   font-family: "Noto Sans KR", sans-serif;
@@ -238,7 +237,7 @@ textarea {
     0 4px 4px rgba(126, 83, 83, 0.05), 0 8px 8px rgba(126, 83, 83, 0.05),
     0 16px 16px rgba(126, 83, 83, 0.05);
   border-radius: 3px;
-  background-color: #f2f2f2;
+  background-color: #f4cccc;
   // position: absolute;
   // top: 0px;
   z-index: 1;
@@ -249,7 +248,7 @@ textarea {
     padding: 15px 10px 10px 10px;
     resize: none;
     border: none;
-    background-color: #F2F2F2;
+    background-color: #f4cccc;
 
     &:hover {
       outline: 0;
@@ -260,7 +259,7 @@ textarea {
   }
 
   textarea::placeholder {
-    color: #7a6a6e;
+    color: #ccc;
   }
 
   select {
@@ -274,7 +273,6 @@ textarea {
     transition: 0.5s;
   }
 }
-
 
 .note-title {
   margin-right: 15px;
@@ -348,7 +346,7 @@ textarea {
   // grid-row-start: 1;
   // grid-column-start: 1;
   // grid-column-end: 1;
-
+  
   select {
     background-color: rgba(235, 235, 235, 0.4);
     color: #654b52;
@@ -364,6 +362,10 @@ textarea {
   &:hover {
     transform: scale(1.05, 1.05);
     opacity: 0.8;
+
+    // .title-view {
+    //   text-shadow : none;
+    // }
   }
 }
 
