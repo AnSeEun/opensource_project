@@ -87,28 +87,43 @@
               placeholder="Title"
             />
             <p />
-            <div v-if="note.category==='To-do List'" id="checkbox">                 
-            <div v-for="index in note.listCount" :key="index">
-              <input type="checkbox" id="note.Todo[index-1]" value="note.Todo[index-1]" v-model="note.checked[index-1]">
-              <label for="note.Todo[index-1]">
-                <input class="todolist" type="text" v-model="note.Todo[index-1]" placeholder="할 일"/>
-              </label>      
+            <div v-if="note.category === 'To-do List'" id="checkbox">
+              <div v-for="index in note.listCount" :key="index">
+                <input
+                  type="checkbox"
+                  id="note.Todo[index-1]"
+                  value="note.Todo[index-1]"
+                  v-model="note.checked[index - 1]"
+                />
+                <label for="note.Todo[index-1]">
+                  <input
+                    class="todolist"
+                    type="text"
+                    v-model="note.Todo[index - 1]"
+                    placeholder="할 일"
+                  />
+                </label>
+              </div>
+              <i
+                class="fas fa-plus"
+                v-if="note.listCount < 5"
+                @click.prevent="note.listCount++"
+              >
+              </i>
             </div>
-            <i class="fas fa-plus" v-if="note.listCount<5" @click.prevent="note.listCount++">
-             </i> 
-            </div>
-            <textarea v-else
-             class="note-textarea"
-             rows="9"
-             onclick="this.selec()"
-             v-model="note.text"
-             placeholder="Take a note..."
+            <textarea
+              v-else
+              class="note-textarea"
+              rows="9"
+              onclick="this.selec()"
+              v-model="note.text"
+              placeholder="Take a note..."
             ></textarea>
             <hr />
             <span>
               <span class="textform-B" @click="setBold(index)">B</span>
-              <span class="textform-U" @click="setUnderbar(index)">U</span>
-              <span class="textform-I" @click="setInclination(index)">I</span>
+              <!-- <span class="textform-U" @click="setUnderbar(index)">U</span>
+              <span class="textform-I" @click="setInclination(index)">I</span> -->
             </span>
             <span class="category-form">
               <select v-model="note.category">
@@ -171,17 +186,32 @@
             placeholder="Title"
           />
           <p />
-          <div v-if="note.category==='To-do List'" id="checkbox">                 
+          <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
-              <input type="checkbox" id="note.Todo[index-1]" value="note.Todo[index-1]" v-model="note.checked[index-1]">
+              <input
+                type="checkbox"
+                id="note.Todo[index-1]"
+                value="note.Todo[index-1]"
+                v-model="note.checked[index - 1]"
+              />
               <label for="note.Todo[index-1]">
-                <input class="todolist" type="text" v-model="note.Todo[index-1]" placeholder="할 일"/>
-              </label>      
+                <input
+                  class="todolist"
+                  type="text"
+                  v-model="note.Todo[index - 1]"
+                  placeholder="할 일"
+                />
+              </label>
             </div>
-            <i class="fas fa-plus" v-if="note.listCount<5" @click.prevent="note.listCount++">
-             </i> 
+            <i
+              class="fas fa-plus"
+              v-if="note.listCount < 5"
+              @click.prevent="note.listCount++"
+            >
+            </i>
           </div>
-          <textarea v-else
+          <textarea
+            v-else
             class="note-textarea"
             rows="9"
             onclick="this.selec()"
@@ -190,9 +220,9 @@
           ></textarea>
           <hr />
           <span>
-            <span class="textform-B" @click="setBold(index)">B</span>
-            <span class="textform-U" @click="setUnderbar(index)">U</span>
-            <span class="textform-I" @click="setInclination(index)">I</span>
+            <span class="textform-B" @click="setBold2(index)">B</span>
+            <!-- <span class="textform-U" @click="setUnderbar(index)">U</span>
+            <span class="textform-I" @click="setInclination(index)">I</span> -->
           </span>
           <span class="category-form">
             <select v-model="note.category">
@@ -219,6 +249,7 @@
       <!-- <div class="testdiv">하이</div> -->
 
       <app-note-editor
+        class="note-editor-container"
         :categorylist="categorys"
         v-if="editorOpen"
         @noteAdded="newNote"
@@ -263,9 +294,10 @@ export default {
           time: "",
           favorite: false,
           is_show: false,
-          Todo:[],
-          checked:[],
-          listCount:1,
+          Todo: [],
+          checked: [],
+          listCount: 1,
+          is_bold: false,
         },
         {
           category: "",
@@ -276,14 +308,15 @@ export default {
           time: "",
           favorite: false,
           is_show: false,
-          Todo:[],
-          checked:[],
-          listCount:1,
+          Todo: [],
+          checked: [],
+          listCount: 1,
+          is_bold: false,
         },
       ],
       categorys: ["기본", "To-do List"],
       colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],
-      boldCnt: 0,
+      // boldCnt: 0,
       underbarCnt: 0,
       inclinationCnt: 0,
     };
@@ -292,7 +325,20 @@ export default {
   computed: {},
 
   methods: {
-    newNote(category, nickname, title, text, theme, time, favorite, is_show,Todo,checked,listCount) {
+    newNote(
+      category,
+      nickname,
+      title,
+      text,
+      theme,
+      time,
+      favorite,
+      is_show,
+      Todo,
+      checked,
+      listCount,
+      is_bold
+    ) {
       this.notes.push({
         category: category,
         nickname: nickname,
@@ -305,6 +351,7 @@ export default {
         Todo: Todo,
         checked: checked,
         listCount: listCount,
+        is_bold: is_bold,
       });
       this.editorOpen = false;
     },
@@ -351,36 +398,44 @@ export default {
       // console.log(index, this.notes[index].favorite);
     },
     setBold: function(index) {
-      this.boldCnt++;
-      if (this.boldCnt % 2 != 0) {
-        document.getElementsByTagName("textarea")[index].style.fontWeight =
-          "bold";
-      } else if (this.boldCnt % 2 == 0) {
-        document.getElementsByTagName("textarea")[index].style.fontWeight =
-          "normal";
-      }
-      console.log(index, "bold");
+      this.notes[index].is_bold = !this.notes[index].is_bold;
+
+      document.getElementsByTagName("textarea")[index].style.fontWeight =
+        "bold";
+      console.log("bold 적용");
+
+      console.log(index, "bold", this.is_bold);
     },
-    setUnderbar: function(index) {
-      this.underbarCnt++;
-      if (this.underbarCnt % 2 != 0) {
-        document.getElementsByTagName("textarea")[index].style.textDecoration =
-          "underline";
-      } else if (this.underbarCnt % 2 == 0) {
-        document.getElementsByTagName("textarea")[index].style.textDecoration =
-          "none";
-      }
-    },
-    setInclination: function(index) {
-      this.inclinationCnt++;
-      if (this.inclinationCnt % 2 != 0) {
-        document.getElementsByTagName("textarea")[index].style.fontStyle =
-          "italic";
-      } else if (this.inclinationCnt % 2 == 0) {
-        document.getElementsByTagName("textarea")[index].style.fontStyle =
-          "normal";
-      }
-    },
+    // unsetBold: function(index) {
+    //   this.is_bold = false;
+
+    //   if(this.is_bold == true) {
+    //     document.getElementsByTagName("textarea")[index].style.fontWeight =
+    //       "bold";
+    //     console.log("bold 적용");
+    //   }
+    //   console.log(index, "bold", this.is_bold);
+    // },
+    // setUnderbar: function(index) {
+    //   this.underbarCnt++;
+    //   if (this.underbarCnt % 2 != 0) {
+    //     document.getElementsByTagName("textarea")[index].style.textDecoration =
+    //       "underline";
+    //   } else if (this.underbarCnt % 2 == 0) {
+    //     document.getElementsByTagName("textarea")[index].style.textDecoration =
+    //       "none";
+    //   }
+    // },
+    // setInclination: function(index) {
+    //   this.inclinationCnt++;
+    //   if (this.inclinationCnt % 2 != 0) {
+    //     document.getElementsByTagName("textarea")[index].style.fontStyle =
+    //       "italic";
+    //   } else if (this.inclinationCnt % 2 == 0) {
+    //     document.getElementsByTagName("textarea")[index].style.fontStyle =
+    //       "normal";
+    //   }
+    // },
   },
 
   mounted() {
