@@ -122,8 +122,8 @@
             <hr />
             <span>
               <span class="textform-B" @click="setBold(index)">B</span>
-              <!-- <span class="textform-U" @click="setUnderbar(index)">U</span>
-              <span class="textform-I" @click="setInclination(index)">I</span> -->
+              <span class="textform-U" @click="setUnderbar(index)">U</span>
+              <span class="textform-I" @click="setInclination(index)">I</span>
             </span>
             <span class="category-form">
               <select v-model="note.category">
@@ -220,9 +220,9 @@
           ></textarea>
           <hr />
           <span>
-            <span class="textform-B" @click="setBold2(index)">B</span>
-            <!-- <span class="textform-U" @click="setUnderbar(index)">U</span>
-            <span class="textform-I" @click="setInclination(index)">I</span> -->
+            <span class="textform-B" @click="setBold(index)">B</span>
+            <span class="textform-U" @click="setUnderbar(index)">U</span>
+            <span class="textform-I" @click="setInclination(index)">I</span>
           </span>
           <span class="category-form">
             <select v-model="note.category">
@@ -298,6 +298,8 @@ export default {
           checked: [],
           listCount: 1,
           is_bold: false,
+          is_under: false,
+          is_incli: false,
         },
         {
           category: "",
@@ -312,6 +314,8 @@ export default {
           checked: [],
           listCount: 1,
           is_bold: false,
+          is_under: false,
+          is_incli: false,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -337,7 +341,9 @@ export default {
       Todo,
       checked,
       listCount,
-      is_bold
+      is_bold,
+      is_under,
+      is_incli
     ) {
       this.notes.push({
         category: category,
@@ -352,6 +358,8 @@ export default {
         checked: checked,
         listCount: listCount,
         is_bold: is_bold,
+        is_under: is_under,
+        is_incli: is_incli,
       });
       this.editorOpen = false;
     },
@@ -405,6 +413,24 @@ export default {
       console.log("bold 적용");
 
       console.log(index, "bold", this.is_bold);
+    },
+    setUnderbar: function(index) {
+      this.notes[index].is_under = !this.notes[index].is_under;
+
+      document.getElementsByTagName("textarea")[index].style.textDecoration =
+        "underline";
+      console.log("underline 적용");
+
+      console.log(index, "underline", this.is_under);
+    },
+    setInclination: function(index) {
+      this.notes[index].is_incli = !this.notes[index].is_incli;
+
+      document.getElementsByTagName("textarea")[index].style.fontStyle =
+        "italic";
+      console.log("italic 적용");
+
+      console.log(index, "italic", this.is_incli);
     },
     // unsetBold: function(index) {
     //   this.is_bold = false;
