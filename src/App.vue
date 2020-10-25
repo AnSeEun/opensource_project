@@ -254,7 +254,6 @@
         v-if="editorOpen"
         @noteAdded="newNote"
         @noteDeleted="deleteNote"
-        @todoList="TodoList"
       >
       </app-note-editor>
 
@@ -286,12 +285,12 @@ export default {
       categoryMain: false,
       notes: [
         {
-          category: "",
+          category: "기본",
           nickname: "user1",
-          title: "Code",
-          text: "1131111222",
-          theme: "#FF8A80",
-          time: "",
+          title: "예시노트1",
+          text: "첫번째 노트입니다",
+          theme: "#F4CCCC",
+          time: "2020-10-25 Sun",
           favorite: false,
           is_show: false,
           Todo: [],
@@ -302,12 +301,12 @@ export default {
           is_incli: false,
         },
         {
-          category: "",
+          category: "To-do List",
           nickname: "user2",
-          title: "event",
-          text: "event",
-          theme: "#DDA0DD",
-          time: "",
+          title: "예시노트2",
+          text: "카테고리에 따라 바뀌는 내용입니다",
+          theme: "#FFF2CC",
+          time: "2020-10-25 Sun",
           favorite: false,
           is_show: false,
           Todo: [],
@@ -387,9 +386,8 @@ export default {
       this.search = search;
       this.is_search = true;
     },
-    addCategory(category, index) {
+    addCategory(category) {
       this.categorys.push(category);
-      this.notes[index].category = category;
     },
     deleteCategory(index) {
       this.categorys.splice(index, 1);
