@@ -129,7 +129,7 @@ textarea {
 
 .title-input,
 .title-input-user {
-  color: #654b52;
+  color: #f2f2f2;
   background-color: #f4cccc;
   padding: 10px;
   border: none;
@@ -147,7 +147,7 @@ textarea {
 }
 
 .title-input::placeholder {
-  color: #654b52;
+  color: #f2f2f2;
   font-size: 18px;
   font-weight: bold;
 }
@@ -259,7 +259,7 @@ textarea {
   }
 
   textarea::placeholder {
-    color: #ccc;
+    color: #f2f2f2;
   }
 
   select {
@@ -429,6 +429,7 @@ textarea {
   font-weight: bold;
   color: #654b52;
 }
+
 
 .category-edit {
   cursor: pointer;
