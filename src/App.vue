@@ -254,7 +254,6 @@
         v-if="editorOpen"
         @noteAdded="newNote"
         @noteDeleted="deleteNote"
-        @todoList="TodoList"
       >
       </app-note-editor>
 
@@ -387,9 +386,8 @@ export default {
       this.search = search;
       this.is_search = true;
     },
-    addCategory(category, index) {
+    addCategory(category) {
       this.categorys.push(category);
-      this.notes[index].category = category;
     },
     deleteCategory(index) {
       this.categorys.splice(index, 1);
