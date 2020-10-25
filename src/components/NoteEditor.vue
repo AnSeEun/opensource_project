@@ -1,6 +1,6 @@
 <template>
   <div class="note-grid">
-    <div class="note-editor">
+    <tr class="note-editor">
       <input
         class="title-input"
         type="text"
@@ -25,15 +25,20 @@
         @categoryAdd="addCategory"
       ></categoryadd>
 
-      <div v-if="category==='To-do List'">
+      <div v-if="category === 'To-do List'">
         <div v-for="index in checkBoxAdd" :key="index">
           <TodoList @listAdd="addList"></TodoList>
-          </div>
-          <i class="fas fa-plus" v-if="checkBoxAdd<5" @click.prevent="checkBoxAdd++">
-        </i>    
+        </div>
+        <i
+          class="fas fa-plus"
+          v-if="checkBoxAdd < 5"
+          @click.prevent="checkBoxAdd++"
+        >
+        </i>
       </div>
-  
-      <textarea v-else
+
+      <textarea
+        v-else
         rows="10"
         v-model="text"
         placeholder="Take a note..."
@@ -43,7 +48,7 @@
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
-    </div>
+    </tr>
   </div>
 </template>
 
@@ -64,8 +69,9 @@ export default {
       favorite: false,
       is_show: false,
       checkBoxAdd: 0,
-      Todo:[],
-      TodoList:[], 
+      Todo: [],
+      TodoList: [],
+      is_bold: false,
     };
   },
   props: ["categorylist"],
@@ -84,14 +90,17 @@ export default {
         this.Todo,
         this.TodoList,
         this.checkBoxAdd,
+        this.is_bold
       );
       this.category = "기본";
       this.nickname = "user";
       this.title = "";
-      (this.text = ""), (this.theme = "#F4CCCC");
+      this.text = "";
+      this.theme = "#F4CCCC";
       this.time = moment().format("YYYY-MM-DD ddd");
-      this.favorite = false,
+      this.favorite = false;
       this.is_show = false;
+      this.is_bold = false;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
@@ -101,14 +110,14 @@ export default {
       this.category = category;
       this.categorylist = !this.categorylist;
     },
-    addList(todo,checked){
-      this.Todo.push(todo)
+    addList(todo, checked) {
+      this.Todo.push(todo);
       this.TodoList.push(checked);
-    }
+    },
   },
   components: {
     categoryadd: categoryadd,
-    TodoList: TodoList
+    TodoList: TodoList,
   },
 };
 </script>
