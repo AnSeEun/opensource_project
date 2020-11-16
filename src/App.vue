@@ -257,6 +257,7 @@
           ></textarea>
           <textarea 
             v-else
+            id = "txt"
             class="note-textarea"
             rows="9"
             v-model="note.text"
@@ -276,6 +277,7 @@
               </option>
             </select>
           </span>
+          <button @click="speech_to_text(index)">마이크</button>
           <span v-if="note.category != 'To-do List'" class="note-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
             <i class = "fas fa-volume-up"></i>
           </span>
@@ -412,13 +414,13 @@ export default {
     deleteNote(index) {
       this.notes.splice(index, 1);
     },
-    notesFilter: function(category, search) {
+    notesFilter: function(category) {
       return this.notes.filter(function(note) {
         return (
-          (note.category == category || category == "") &&
-          (note.text.includes(search) ||
-            note.title.includes(search) ||
-            search == "")
+          (note.category == category || category == "") //&&
+          //(note.text.includes(search) ||
+           // note.title.includes(search) ||
+           // search == "")
         );
       });
     },
@@ -452,8 +454,6 @@ export default {
     },
     setBold: function(index) {
       this.notes[index].is_bold = !this.notes[index].is_bold;
-
-      
     },
     setUnderbar: function(index) {
       this.notes[index].is_under = !this.notes[index].is_under;
@@ -475,7 +475,31 @@ export default {
             speechMsg.text = text           
             // SpeechSynthesisUtterance에 저장된 내용을 바탕으로 음성합성 실행
             window.speechSynthesis.speak(speechMsg)
-    }
+    },
+   speech_to_text(){
+        var text=document.getElementById('txt');
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+        recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 5;
+        recognition.start();
+        recognition.onstart = function(){
+          console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.") 
+        }; 
+        recognition.onresult = function(){
+          console.log('You said: ', event.results[0][0].transcript);
+          text.value = event.results[0][0].transcript
+        };
+        console.log('2'+text);
+        //recognition.onresult = function(event) {
+        //  console.log('You said: ', event.results[0][0].transcript);
+        //  text.innerHTML=event.results[0][0].transcript;
+        //  //this.notes[index].text=text;
+        //  console.log('첫번째:'+text.innerHTML);
+        //};
+        
+        //console.log('두번째:'+this.notes[index].text);
+    },
   },
 
   mounted() {
