@@ -38,7 +38,6 @@
       </div>
 
       <textarea
-        id = "txt"
         v-else
         rows="10"
         v-model="text"
@@ -123,7 +122,6 @@ export default {
       this.TodoList.push(checked);
     },
     speech_to_text(){
-        var text=document.getElementById("txt");
         var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
         recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
         recognition.interimResults = false;
@@ -132,10 +130,10 @@ export default {
         recognition.onstart = function(){
           console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.") 
         }; 
+        var self = this;
         recognition.onresult = function(){
           console.log('You said: ', event.results[0][0].transcript);
-          text.value = event.results[0][0].transcript;
-          this.text = text.value;
+          self.text = event.results[0][0].transcript;
         };
     },
   },
