@@ -257,7 +257,7 @@
           ></textarea>
           <textarea 
             v-else
-            name = "txt[]"
+            name = "txt"
             class="note-textarea"
             rows="9"
             v-model="note.text"
@@ -477,7 +477,7 @@ export default {
             window.speechSynthesis.speak(speechMsg)
     },
    speech_to_text(index){
-        var text=document.getElementsByName("txt[]");
+        var text=document.getElementsByName("txt");
         var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
         recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
         recognition.interimResults = false;
@@ -488,7 +488,7 @@ export default {
         }; 
         recognition.onresult = function(){
           console.log('You said: ', event.results[0][0].transcript);
-          text[index].value = event.results[0][0].transcript
+          text[index].value = event.results[0][0].transcript;
         };
     },
   },
@@ -499,8 +499,6 @@ export default {
     }
     if (localStorage.getItem("categorys"))
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
-    //if (localStorage.getItem("txt"))
-     //document.getElementsByName("txt").value = JSON.parse(localStorage.getItem("txt"));
   },
 
   watch: {
@@ -508,8 +506,6 @@ export default {
       handler() {
         var newNotes = this.notes;
         localStorage.setItem("notes", JSON.stringify(newNotes));
-        //var textarea = document.getElementsByName("txt");
-        //localStorage.setItem("txt", JSON.stringify(textarea));
 
       },
       deep: true,
