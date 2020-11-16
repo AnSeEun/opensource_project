@@ -279,7 +279,6 @@
           <span v-if="note.category != 'To-do List'" class="note-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
             <i class = "fas fa-volume-up"></i>
           </span>
-          <button @click="speech_to_text(index)">마이크</button>
           <span class="note-color" @click="modalColor(index)">
             <i class="fas fa-palette"></i>
           </span>
@@ -476,22 +475,7 @@ export default {
             speechMsg.text = text           
             // SpeechSynthesisUtterance에 저장된 내용을 바탕으로 음성합성 실행
             window.speechSynthesis.speak(speechMsg)
-    },
-    speech_to_text(index){
-      var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
- recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
-         recognition.interimResults = false;
-         recognition.maxAlternatives = 5; 
-             recognition.start();
-            recognition.onstart = function(){
-                 console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.")
-             };
-            recognition.onresult = function(event) {
-                 console.log('You said: ', event.results[0][0].transcript);
-             };
-            this.notes[index].text="마이크테스트"
-
-    },
+    }
   },
 
   mounted() {
