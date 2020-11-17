@@ -43,7 +43,11 @@
         v-model="text"
         placeholder="Take a note..."
       ></textarea>
-      <button @click="speech_to_text">마이크</button>
+      <div v-if="category != 'To-do List'">
+        <span @click="speech_to_text">
+            <i class = "fas fa-microphone"></i>
+        </span>
+      </div> 
       <div class="note-editor-bottom">
         <button @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
@@ -95,7 +99,7 @@ export default {
         this.checkBoxAdd,
         this.is_bold,
         this.is_under,
-        this.is_incli,
+        this.is_incli
       );
       this.category = "기본";
       this.nickname = "user";
@@ -121,20 +125,25 @@ export default {
       this.Todo.push(todo);
       this.TodoList.push(checked);
     },
-    speech_to_text(){
-        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-        recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
+    speech_to_text() {
+      var recognition = new (window.SpeechRecognition ||
+        window.webkitSpeechRecognition ||
+        window.mozSpeechRecognition ||
+        window.msSpeechRecognition)();
+        recognition.lang = "ko-KR";
         recognition.interimResults = false;
         recognition.maxAlternatives = 5;
         recognition.start();
-        recognition.onstart = function(){
-          console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.") 
-        }; 
-        var self = this;
-        recognition.onresult = function(){
-          console.log('You said: ', event.results[0][0].transcript);
-          self.text = event.results[0][0].transcript;
+        recognition.onstart = function() {
+         console.log(
+           "음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요."
+         );
         };
+      var self = this;
+      recognition.onresult = function() {
+        console.log("You said: ", event.results[0][0].transcript);
+        self.text = self.text+event.results[0][0].transcript;
+      };
     },
   },
   components: {

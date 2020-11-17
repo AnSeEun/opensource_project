@@ -72,6 +72,9 @@
             <span class="delete" @click.prevent="deleteNote(index)">
               <i class="fas fa-times"></i>
             </span>
+            <span class="deleteContent" @click.prevent="deleteNoteContents(index)">
+              <i class="fas fa-trash-alt"></i>
+            </span>
             <span class="note-date-span">
               <font class="note-date" size="2em" color="#FFFFFF">
                 {{ note.time }}
@@ -96,13 +99,22 @@
                   v-model="note.checked[index - 1]"
                 />
                 <label for="note.Todo[index-1]">
-                  <input
-                    class="todolist"
-                    type="text"
-                    v-model="note.Todo[index - 1]"
-                    placeholder="할 일"
-                  />
-                </label>
+                <input
+                  v-if="note.checked[index-1]!=true"
+                  class="todolist"
+                  type="text"
+                  v-model="note.Todo[index - 1]"
+                  placeholder="할 일"
+                />
+                <input
+                  v-else
+                  class="todolist"
+                  type="text"
+                  style="text-decoration:line-through"
+                  v-model="note.Todo[index - 1]"
+                  placeholder="할 일"
+                />     
+              </label>
               </div>
               <i
                 class="fas fa-plus"
@@ -144,11 +156,11 @@
           ></textarea>
           </div>
             <hr />
-            <span>
-              <span class="textform-B" @click="setBold(index)">B</span>
-              <span class="textform-U" @click="setUnderbar(index)">U</span>
-              <span class="textform-I" @click="setInclination(index)">I</span>
-            </span>
+            <span v-if="note.category!='To-do List'">
+            <span class="textform-B" @click="setBold(index)">B</span>
+            <span class="textform-U" @click="setUnderbar(index)">U</span>
+            <span class="textform-I" @click="setInclination(index)">I</span>
+          </span>
             <span class="category-form">
               <select v-model="note.category">
                 <option v-for="list in categorys" :key="list">
@@ -156,7 +168,13 @@
                 </option>
               </select>
             </span>
-            <span v-if="note.category != 'To-do List'" class="note-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
+            <span v-if="note.category!='To-do List'" class="speech-to-text" @click="speech_to_text(index)">
+            <i class = "fas fa-microphone"></i>
+          </span>   
+          <span v-if="note.category==='To-do List' && note.checked!=true" class="text-to-speech" @click="speak('To do List 목록\n'+note.Todo,{rate:1,pitch:1.2,lang:ko-KR})">
+             <i class = "fas fa-volume-up"></i>
+          </span>      
+          <span v-if="note.category != 'To-do List'" class="text-to-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
             <i class = "fas fa-volume-up"></i>
           </span>
             <span class="note-color" @click="modalColor(index)">
@@ -192,6 +210,9 @@
           <span class="delete" @click.prevent="deleteNote(index)">
             <i class="fas fa-times"></i>
           </span>
+          <span class="deleteContent" @click.prevent="deleteNoteContents(index)">
+              <i class="fas fa-trash-alt"></i>
+            </span>
           <span class="note-date-span">
             <font class="note-date" size="2em" color="#FFFFFF">
               {{ note.time }}
@@ -217,11 +238,20 @@
               />
               <label for="note.Todo[index-1]">
                 <input
+                  v-if="note.checked[index-1]!=true"
                   class="todolist"
                   type="text"
                   v-model="note.Todo[index - 1]"
                   placeholder="할 일"
                 />
+                <input
+                  v-else
+                  class="todolist"
+                  type="text"
+                  style="text-decoration:line-through"
+                  v-model="note.Todo[index - 1]"
+                  placeholder="할 일"
+                />     
               </label>
             </div>
             <i
@@ -264,7 +294,7 @@
           ></textarea>
           </div>
           <hr />
-          <span>
+          <span v-if="note.category!='To-do List'">
             <span class="textform-B" @click="setBold(index)">B</span>
             <span class="textform-U" @click="setUnderbar(index)">U</span>
             <span class="textform-I" @click="setInclination(index)">I</span>
@@ -276,10 +306,16 @@
               </option>
             </select>
           </span>
-          <button @click="speech_to_text(index)">마이크</button>
-          <span v-if="note.category != 'To-do List'" class="note-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
+          <span v-if="note.category!='To-do List'" class="speech-to-text" @click="speech_to_text(index)">
+            <i class = "fas fa-microphone"></i>
+          </span>   
+          <span v-if="note.category==='To-do List' && note.checked!=true" class="text-to-speech" @click="speak('To do List 목록\n'+note.Todo,{rate:1,pitch:1.2,lang:ko-KR})">
+             <i class = "fas fa-volume-up"></i>
+          </span>      
+          <span v-if="note.category != 'To-do List'" class="text-to-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
             <i class = "fas fa-volume-up"></i>
           </span>
+
           <span class="note-color" @click="modalColor(index)">
             <i class="fas fa-palette"></i>
           </span>
@@ -343,6 +379,7 @@ export default {
           favorite: false,
           is_show: false,
           Todo: [],
+          TodoSpeech:[],
           checked: [],
           listCount: 1,
           is_bold: false,
@@ -412,6 +449,9 @@ export default {
     },
     deleteNote(index) {
       this.notes.splice(index, 1);
+    },
+    deleteNoteContents(index){
+      this.notes[index].text="";
     },
     notesFilter: function(category,search) {
       return this.notes.filter(function(note) {
@@ -487,10 +527,8 @@ export default {
         var self = this;
         recognition.onresult = function(){
           console.log('You said: ', event.results[0][0].transcript);
-          self.notes[index].text = event.results[0][0].transcript;
+          self.notes[index].text = self.notes[index].text+event.results[0][0].transcript;
         };
-        
-
     },
   },
 

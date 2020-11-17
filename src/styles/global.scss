@@ -550,7 +550,7 @@ textarea {
   transition: 0.3s;
 }
 
-.note-speech {
+.text-to-speech {
   position: absolute;
   right: 50px;
   color: #7a6a6e;
@@ -562,6 +562,20 @@ textarea {
     // display: none;
   }
 }
+
+.speech-to-text {
+  position: absolute;
+  right: 200px;
+  color: #7a6a6e;
+  transition: 0.2s;
+
+  &:hover {
+    // opacity: 1;
+    color: #654b52;
+    // display: none;
+  }
+}
+
 .note-color {
   position: absolute;
   right: 25px;
@@ -689,6 +703,21 @@ textarea {
 .delete {
   position: absolute;
   right: 20px;
+  top: 10px;
+  font-size: 25px;
+  color: #fff;
+  text-shadow: -1px 0 rgb(235, 159, 159), 0 2px rgb(235, 159, 159),
+    1px 0 rgb(235, 159, 159), 0 -1px rgb(235, 159, 159);
+  transition: 0.2s;
+
+  &:active {
+    color: #fc5e5e;
+  }
+}
+
+.deleteContent {
+  position: absolute;
+  right: 50px;
   top: 10px;
   font-size: 25px;
   color: #fff;
