@@ -72,7 +72,7 @@
             <span class="delete" @click.prevent="deleteNote(index)">
               <i class="fas fa-times"></i>
             </span>
-            <span class="deleteContent" @click.prevent="deleteNoteContents(index)">
+            <span v-if="note.category != 'To-do List'" class="deleteContent" @click.prevent="deleteNoteContents(index)">
               <i class="fas fa-trash-alt"></i>
             </span>
             <span class="note-date-span">
@@ -210,7 +210,7 @@
           <span class="delete" @click.prevent="deleteNote(index)">
             <i class="fas fa-times"></i>
           </span>
-          <span class="deleteContent" @click.prevent="deleteNoteContents(index)">
+          <span v-if="note.category != 'To-do List'" class="deleteContent" @click.prevent="deleteNoteContents(index)">
               <i class="fas fa-trash-alt"></i>
             </span>
           <span class="note-date-span">
@@ -243,6 +243,7 @@
                   type="text"
                   v-model="note.Todo[index - 1]"
                   placeholder="할 일"
+                  
                 />
                 <input
                   v-else
@@ -251,6 +252,7 @@
                   style="text-decoration:line-through"
                   v-model="note.Todo[index - 1]"
                   placeholder="할 일"
+                  
                 />     
               </label>
             </div>
@@ -379,7 +381,6 @@ export default {
           favorite: false,
           is_show: false,
           Todo: [],
-          TodoSpeech:[],
           checked: [],
           listCount: 1,
           is_bold: false,

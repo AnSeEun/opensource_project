@@ -1,9 +1,10 @@
 <template>
   <span id="checkbox">
-    <input type="checkbox" id="Todo.todo" value="Todo.todo" v-model="Todo.checked" disabled>
-    <label for="Todo.todo">
-      <input class="todolist-edit" type="text" v-model="Todo.todo" placeholder="할 일"/>
+    <input type="checkbox" id="todo" value="todo" v-model="checked" disabled>
+    <label for="todo">
+      <input class="todolist-edit" type="text" v-model="todo" placeholder="할 일"/>
     </label>
+    <button v-if="confirm" class="check" @click.prevent="createList" @click="confirm=false">확인</button>
   </span>
 </template>
 
@@ -11,34 +12,16 @@
 export default {
   data: function() {
     return {
-      Todo:[
-        {
-          todo:'',
-          checked:false,
-        }
-      ]
+      todo:'',
+      checked:false,
+      confirm: true,
     };
   },
   methods: {
     createList() {
-      this.$emit('listAdd',this.Todo.todo, this.Todo.checked); 
-    },
-  },
-  
-  mounted() {
-    if (localStorage.getItem("Todo")){
-      this.Todo = JSON.parse(localStorage.getItem("Todo"));
-    }
-  },
-
-  watch: {
-    notes: {
-      handler() {
-        var newTodo = this.Todo;
-        localStorage.setItem("Todo", JSON.stringify(newTodo));
-      },
+      this.$emit('listAdd',this.todo, this.checked); 
+      
     },
   },
 };
-
 </script>
