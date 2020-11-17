@@ -77,8 +77,15 @@
               class="deleteContent"
               @click.prevent="deleteNoteContents(index)"
             >
-              <i class="fas fa-trash-alt"></i>
+              <i
+                v-on:mouseover="deleteContentModalIn(index)"
+                v-on:mouseout="deleteContentModalOut(index)"
+                class="fas fa-trash-alt"
+              ></i>
             </span>
+            <div v-if="note.contentModal == true" class="contentDeleteModal">
+              노트 내용 삭제
+            </div>
             <span class="note-date-span">
               <font class="note-date" size="2em" color="#FFFFFF">
                 {{ note.time }}
@@ -94,7 +101,7 @@
               placeholder="Title"
             />
             <p />
-            <div class="note-image-wrap">
+            <div v-if="note.img_path != null" class="note-image-wrap">
               <img class="note-image" :src="note.img_path" />
             </div>
 
@@ -217,10 +224,18 @@
               </ul>
             </div>
 
-            <div>
+            <div class="imageInputBox">
               <form>
-                <input type="file" v-on:change="setImageFile($event, index)" />
+                <input
+                  class="imageInput"
+                  type="file"
+                  accept="image/*"
+                  v-on:change="setImageFile($event)"
+                />
               </form>
+              <button class="imageInputBtn" v-on:click="setFileExploer(index)">
+                이미지 업로드
+              </button>
             </div>
           </div>
         </tr>
@@ -248,9 +263,15 @@
             class="deleteContent"
             @click.prevent="deleteNoteContents(index)"
           >
-            <i v-on:mouseover="deleteContentModalIn(index)" v-on:mouseout="deleteContentModalOut(index)" class="fas fa-trash-alt"></i>
+            <i
+              v-on:mouseover="deleteContentModalIn(index)"
+              v-on:mouseout="deleteContentModalOut(index)"
+              class="fas fa-trash-alt"
+            ></i>
           </span>
-          <div v-if="note.contentModal == true" class="contentDeleteModal">노트 내용 삭제</div>
+          <div v-if="note.contentModal == true" class="contentDeleteModal">
+            노트 내용 삭제
+          </div>
           <span class="note-date-span">
             <font class="note-date" size="2em" color="#FFFFFF">
               {{ note.time }}
@@ -510,7 +531,7 @@ export default {
       is_under,
       is_incli,
       img_path,
-      contentModal,
+      contentModal
     ) {
       this.notes.push({
         category: category,
@@ -539,10 +560,10 @@ export default {
       this.notes[index].text = "";
       this.notes[index].img_path = null;
     },
-    deleteContentModalIn(index){
+    deleteContentModalIn(index) {
       this.notes[index].contentModal = true;
     },
-    deleteContentModalOut(index){
+    deleteContentModalOut(index) {
       this.notes[index].contentModal = false;
     },
     notesFilter: function(category, search) {
