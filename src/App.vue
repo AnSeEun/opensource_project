@@ -50,7 +50,7 @@
     </div>
 
     <table class="noteContainer">
-      <!--favorite note-->
+      <!--favorite note part-->
       <!-- <div class="favorite-part">Favorites</div> -->
       <div class="note-favorite">
         <tr
@@ -94,6 +94,10 @@
               placeholder="Title"
             />
             <p />
+            <div class="note-image-wrap">
+              <img class="note-image" :src="note.img_path" />
+            </div>
+
             <div v-if="note.category === 'To-do List'" id="checkbox">
               <div v-for="index in note.listCount" :key="index">
                 <input
@@ -212,6 +216,12 @@
                 <li class="color5" @click="setNoteColor(index, colors[4])"></li>
               </ul>
             </div>
+
+            <div>
+              <form>
+                <input type="file" v-on:change="setImageFile($event, index)" />
+              </form>
+            </div>
           </div>
         </tr>
       </div>
@@ -238,8 +248,9 @@
             class="deleteContent"
             @click.prevent="deleteNoteContents(index)"
           >
-            <i class="fas fa-trash-alt"></i>
+            <i v-on:mouseover="deleteContentModalIn(index)" v-on:mouseout="deleteContentModalOut(index)" class="fas fa-trash-alt"></i>
           </span>
+          <div v-if="note.contentModal == true" class="contentDeleteModal">노트 내용 삭제</div>
           <span class="note-date-span">
             <font class="note-date" size="2em" color="#FFFFFF">
               {{ note.time }}
@@ -255,7 +266,7 @@
             placeholder="Title"
           />
           <p />
-          <div>
+          <div v-if="note.img_path != null" class="note-image-wrap">
             <img class="note-image" :src="note.img_path" />
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
@@ -379,10 +390,18 @@
             </ul>
           </div>
 
-          <div>
+          <div class="imageInputBox">
             <form>
-              <input type="file" v-on:change="setImageFile($event, index)" />
+              <input
+                class="imageInput"
+                type="file"
+                accept="image/*"
+                v-on:change="setImageFile($event)"
+              />
             </form>
+            <button class="imageInputBtn" v-on:click="setFileExploer(index)">
+              이미지 업로드
+            </button>
           </div>
         </div>
       </tr>
@@ -439,6 +458,7 @@ export default {
           is_under: false,
           is_incli: false,
           img_path: "",
+          contentModal: false,
         },
         {
           category: "To-do List",
@@ -456,6 +476,7 @@ export default {
           is_under: false,
           is_incli: false,
           img_path: "",
+          contentModal: false,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -464,6 +485,9 @@ export default {
       inclinationCnt: 0,
       imgFile: null,
       imgUrl: null,
+      imgIndex: -1,
+      fileReader: null,
+      test: null,
     };
   },
 
@@ -484,7 +508,9 @@ export default {
       listCount,
       is_bold,
       is_under,
-      is_incli
+      is_incli,
+      img_path,
+      contentModal,
     ) {
       this.notes.push({
         category: category,
@@ -501,6 +527,8 @@ export default {
         is_bold: is_bold,
         is_under: is_under,
         is_incli: is_incli,
+        img_path: img_path,
+        contentModal: contentModal,
       });
       this.editorOpen = false;
     },
@@ -509,6 +537,13 @@ export default {
     },
     deleteNoteContents(index) {
       this.notes[index].text = "";
+      this.notes[index].img_path = null;
+    },
+    deleteContentModalIn(index){
+      this.notes[index].contentModal = true;
+    },
+    deleteContentModalOut(index){
+      this.notes[index].contentModal = false;
     },
     notesFilter: function(category, search) {
       return this.notes.filter(function(note) {
@@ -596,16 +631,23 @@ export default {
           self.notes[index].text + event.results[0][0].transcript;
       };
     },
-    setFileExploer: function() {
-      document.querySelector(".inputImage").click();
+    setFileExploer: function(index) {
+      console.log("setFileExploer!", index);
+      this.imgIndex = index;
+      document.querySelector(".imageInput").click();
     },
-    setImageFile: function($event, index) {
-      console.log(event.target.files, index);
-      this.imgFile = event.target.files[0];
-      this.imgUrl = URL.createObjectURL(this.imgFile);
-      this.notes[index].img_path = this.imgUrl;
-      // console.log(this.imageUrl);
-      // console.log("index: ", index);
+    setImageFile: function(event) {
+      this.imgFile = event.target.files;
+      console.log(this.imgFile);
+
+      this.fileReader = new FileReader();
+      console.log(this.fileReader);
+      this.fileReader.readAsDataURL(this.imgFile[0]);
+      this.fileReader.onload = event => {
+        // console.log(event.target.result);
+        this.imgUrl = event.target.result;
+        this.notes[this.imgIndex].img_path = this.imgUrl;
+      };
     },
   },
 
