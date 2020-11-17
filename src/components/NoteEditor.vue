@@ -79,6 +79,7 @@ export default {
       is_bold: false,
       is_under: false,
       is_incli: false,
+      img_path: "",
     };
   },
   props: ["categorylist"],
@@ -99,7 +100,8 @@ export default {
         this.checkBoxAdd,
         this.is_bold,
         this.is_under,
-        this.is_incli
+        this.is_incli,
+        this.img_path,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -112,6 +114,7 @@ export default {
       this.is_bold = false;
       this.is_under = false;
       this.is_incli = false;
+      this.img_path = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
