@@ -45,9 +45,9 @@
       ></textarea>
       <div v-if="category != 'To-do List'">
         <span @click="speech_to_text">
-            <i class = "fas fa-microphone"></i>
+          <i class="fas fa-microphone"></i>
         </span>
-      </div> 
+      </div>
       <div class="note-editor-bottom">
         <button @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
@@ -79,6 +79,8 @@ export default {
       is_bold: false,
       is_under: false,
       is_incli: false,
+      img_path: "",
+      contentModal: false,
     };
   },
   props: ["categorylist"],
@@ -99,7 +101,9 @@ export default {
         this.checkBoxAdd,
         this.is_bold,
         this.is_under,
-        this.is_incli
+        this.is_incli,
+        this.img_path,
+        this.contentModal
       );
       this.category = "기본";
       this.nickname = "user";
@@ -112,6 +116,8 @@ export default {
       this.is_bold = false;
       this.is_under = false;
       this.is_incli = false;
+      this.img_path = "";
+      this.contentModal = false;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
@@ -130,19 +136,19 @@ export default {
         window.webkitSpeechRecognition ||
         window.mozSpeechRecognition ||
         window.msSpeechRecognition)();
-        recognition.lang = "ko-KR";
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 5;
-        recognition.start();
-        recognition.onstart = function() {
-         console.log(
-           "음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요."
-         );
-        };
+      recognition.lang = "ko-KR";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 5;
+      recognition.start();
+      recognition.onstart = function() {
+        console.log(
+          "음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요."
+        );
+      };
       var self = this;
       recognition.onresult = function() {
         console.log("You said: ", event.results[0][0].transcript);
-        self.text = self.text+event.results[0][0].transcript;
+        self.text = self.text + event.results[0][0].transcript;
       };
     },
   },

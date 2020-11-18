@@ -50,7 +50,7 @@
     </div>
 
     <table class="noteContainer">
-      <!--favorite note-->
+      <!--favorite note part-->
       <!-- <div class="favorite-part">Favorites</div> -->
       <div class="note-favorite">
         <tr
@@ -72,9 +72,20 @@
             <span class="delete" @click.prevent="deleteNote(index)">
               <i class="fas fa-times"></i>
             </span>
-            <span v-if="note.category != 'To-do List'" class="deleteContent" @click.prevent="deleteNoteContents(index)">
-              <i class="fas fa-trash-alt"></i>
+            <span
+              v-if="note.category != 'To-do List'"
+              class="deleteContent"
+              @click.prevent="deleteNoteContents(index)"
+            >
+              <i
+                v-on:mouseover="deleteContentModalIn(index)"
+                v-on:mouseout="deleteContentModalOut(index)"
+                class="fas fa-trash-alt"
+              ></i>
             </span>
+            <div v-if="note.contentModal == true" class="contentDeleteModal">
+              노트 내용 삭제
+            </div>
             <span class="note-date-span">
               <font class="note-date" size="2em" color="#FFFFFF">
                 {{ note.time }}
@@ -90,6 +101,10 @@
               placeholder="Title"
             />
             <p />
+            <div v-if="note.img_path != null" class="note-image-wrap">
+              <img class="note-image" :src="note.img_path" />
+            </div>
+
             <div v-if="note.category === 'To-do List'" id="checkbox">
               <div v-for="index in note.listCount" :key="index">
                 <input
@@ -99,22 +114,22 @@
                   v-model="note.checked[index - 1]"
                 />
                 <label for="note.Todo[index-1]">
-                <input
-                  v-if="note.checked[index-1]!=true"
-                  class="todolist"
-                  type="text"
-                  v-model="note.Todo[index - 1]"
-                  placeholder="할 일"
-                />
-                <input
-                  v-else
-                  class="todolist"
-                  type="text"
-                  style="text-decoration:line-through"
-                  v-model="note.Todo[index - 1]"
-                  placeholder="할 일"
-                />     
-              </label>
+                  <input
+                    v-if="note.checked[index - 1] != true"
+                    class="todolist"
+                    type="text"
+                    v-model="note.Todo[index - 1]"
+                    placeholder="할 일"
+                  />
+                  <input
+                    v-else
+                    class="todolist"
+                    type="text"
+                    style="text-decoration:line-through"
+                    v-model="note.Todo[index - 1]"
+                    placeholder="할 일"
+                  />
+                </label>
               </div>
               <i
                 class="fas fa-plus"
@@ -123,44 +138,45 @@
               >
               </i>
             </div>
-             <div v-else>
-          <textarea 
-            v-if="note.is_bold" 
-            style="font-weight:bold"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else-if="note.is_under" 
-            style="text-decoration:underline"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else-if="note.is_incli" style="fontStyle:italic"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          </div>
+            <div v-else>
+              <textarea
+                v-if="note.is_bold"
+                style="font-weight:bold"
+                class="note-textarea"
+                rows="9"
+                v-model="note.text"
+                placeholder="Take a note..."
+              ></textarea>
+              <textarea
+                v-else-if="note.is_under"
+                style="text-decoration:underline"
+                class="note-textarea"
+                rows="9"
+                v-model="note.text"
+                placeholder="Take a note..."
+              ></textarea>
+              <textarea
+                v-else-if="note.is_incli"
+                style="fontStyle:italic"
+                class="note-textarea"
+                rows="9"
+                v-model="note.text"
+                placeholder="Take a note..."
+              ></textarea>
+              <textarea
+                v-else
+                class="note-textarea"
+                rows="9"
+                v-model="note.text"
+                placeholder="Take a note..."
+              ></textarea>
+            </div>
             <hr />
-            <span v-if="note.category!='To-do List'">
-            <span class="textform-B" @click="setBold(index)">B</span>
-            <span class="textform-U" @click="setUnderbar(index)">U</span>
-            <span class="textform-I" @click="setInclination(index)">I</span>
-          </span>
+            <span v-if="note.category != 'To-do List'">
+              <span class="textform-B" @click="setBold(index)">B</span>
+              <span class="textform-U" @click="setUnderbar(index)">U</span>
+              <span class="textform-I" @click="setInclination(index)">I</span>
+            </span>
             <span class="category-form">
               <select v-model="note.category">
                 <option v-for="list in categorys" :key="list">
@@ -168,15 +184,33 @@
                 </option>
               </select>
             </span>
-            <span v-if="note.category!='To-do List'" class="speech-to-text" @click="speech_to_text(index)">
-            <i class = "fas fa-microphone"></i>
-          </span>   
-          <span v-if="note.category==='To-do List' && note.checked!=true" class="text-to-speech" @click="speak('To do List 목록\n'+note.Todo,{rate:1,pitch:1.2,lang:ko-KR})">
-             <i class = "fas fa-volume-up"></i>
-          </span>      
-          <span v-if="note.category != 'To-do List'" class="text-to-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
-            <i class = "fas fa-volume-up"></i>
-          </span>
+            <span
+              v-if="note.category != 'To-do List'"
+              class="speech-to-text"
+              @click="speech_to_text(index)"
+            >
+              <i class="fas fa-microphone"></i>
+            </span>
+            <span
+              v-if="note.category === 'To-do List' && note.checked != true"
+              class="text-to-speech"
+              @click="
+                speak('To do List 목록\n' + note.Todo, {
+                  rate: 1,
+                  pitch: 1.2,
+                  lang: ko - KR,
+                })
+              "
+            >
+              <i class="fas fa-volume-up"></i>
+            </span>
+            <span
+              v-if="note.category != 'To-do List'"
+              class="text-to-speech"
+              @click="speak(note.text, { rate: 1, pitch: 1.2, lang: ko - KR })"
+            >
+              <i class="fas fa-volume-up"></i>
+            </span>
             <span class="note-color" @click="modalColor(index)">
               <i class="fas fa-palette"></i>
             </span>
@@ -189,12 +223,26 @@
                 <li class="color5" @click="setNoteColor(index, colors[4])"></li>
               </ul>
             </div>
+
+            <div class="imageInputBox">
+              <form>
+                <input
+                  class="imageInput"
+                  type="file"
+                  accept="image/*"
+                  v-on:change="setImageFile($event)"
+                />
+              </form>
+              <button class="imageInputBtn" v-on:click="setFileExploer(index)">
+                이미지 업로드
+              </button>
+            </div>
           </div>
         </tr>
       </div>
 
       <hr class="part-line" />
-      <!--notes-->
+      <!--notes part-->
       <div class="note-part"></div>
       <tr
         v-for="(note, index) in notesFilter(selected, search)"
@@ -210,9 +258,20 @@
           <span class="delete" @click.prevent="deleteNote(index)">
             <i class="fas fa-times"></i>
           </span>
-          <span v-if="note.category != 'To-do List'" class="deleteContent" @click.prevent="deleteNoteContents(index)">
-              <i class="fas fa-trash-alt"></i>
-            </span>
+          <span
+            v-if="note.category != 'To-do List'"
+            class="deleteContent"
+            @click.prevent="deleteNoteContents(index)"
+          >
+            <i
+              v-on:mouseover="deleteContentModalIn(index)"
+              v-on:mouseout="deleteContentModalOut(index)"
+              class="fas fa-trash-alt"
+            ></i>
+          </span>
+          <div v-if="note.contentModal == true" class="contentDeleteModal">
+            노트 내용 삭제
+          </div>
           <span class="note-date-span">
             <font class="note-date" size="2em" color="#FFFFFF">
               {{ note.time }}
@@ -228,6 +287,9 @@
             placeholder="Title"
           />
           <p />
+          <div v-if="note.img_path != null" class="note-image-wrap">
+            <img class="note-image" :src="note.img_path" />
+          </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
               <input
@@ -238,12 +300,11 @@
               />
               <label for="note.Todo[index-1]">
                 <input
-                  v-if="note.checked[index-1]!=true"
+                  v-if="note.checked[index - 1] != true"
                   class="todolist"
                   type="text"
                   v-model="note.Todo[index - 1]"
                   placeholder="할 일"
-                  
                 />
                 <input
                   v-else
@@ -252,8 +313,7 @@
                   style="text-decoration:line-through"
                   v-model="note.Todo[index - 1]"
                   placeholder="할 일"
-                  
-                />     
+                />
               </label>
             </div>
             <i
@@ -264,39 +324,40 @@
             </i>
           </div>
           <div v-else>
-          <textarea 
-            v-if="note.is_bold" 
-            style="font-weight:bold"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else-if="note.is_under" 
-            style="text-decoration:underline"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else-if="note.is_incli" style="fontStyle:italic"
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
-          <textarea 
-            v-else
-            class="note-textarea"
-            rows="9"
-            v-model="note.text"
-            placeholder="Take a note..."
-          ></textarea>
+            <textarea
+              v-if="note.is_bold"
+              style="font-weight:bold"
+              class="note-textarea"
+              rows="9"
+              v-model="note.text"
+              placeholder="Take a note..."
+            ></textarea>
+            <textarea
+              v-else-if="note.is_under"
+              style="text-decoration:underline"
+              class="note-textarea"
+              rows="9"
+              v-model="note.text"
+              placeholder="Take a note..."
+            ></textarea>
+            <textarea
+              v-else-if="note.is_incli"
+              style="fontStyle:italic"
+              class="note-textarea"
+              rows="9"
+              v-model="note.text"
+              placeholder="Take a note..."
+            ></textarea>
+            <textarea
+              v-else
+              class="note-textarea"
+              rows="9"
+              v-model="note.text"
+              placeholder="Take a note..."
+            ></textarea>
           </div>
           <hr />
-          <span v-if="note.category!='To-do List'">
+          <span v-if="note.category != 'To-do List'">
             <span class="textform-B" @click="setBold(index)">B</span>
             <span class="textform-U" @click="setUnderbar(index)">U</span>
             <span class="textform-I" @click="setInclination(index)">I</span>
@@ -308,20 +369,38 @@
               </option>
             </select>
           </span>
-          <span v-if="note.category!='To-do List'" class="speech-to-text" @click="speech_to_text(index)">
-            <i class = "fas fa-microphone"></i>
-          </span>   
-          <span v-if="note.category==='To-do List' && note.checked!=true" class="text-to-speech" @click="speak('To do List 목록\n'+note.Todo,{rate:1,pitch:1.2,lang:ko-KR})">
-             <i class = "fas fa-volume-up"></i>
-          </span>      
-          <span v-if="note.category != 'To-do List'" class="text-to-speech" @click="speak(note.text,{rate:1,pitch:1.2,lang:ko-KR})">
-            <i class = "fas fa-volume-up"></i>
+          <span
+            v-if="note.category != 'To-do List'"
+            class="speech-to-text"
+            @click="speech_to_text(index)"
+          >
+            <i class="fas fa-microphone"></i>
+          </span>
+          <span
+            v-if="note.category === 'To-do List' && note.checked != true"
+            class="text-to-speech"
+            @click="
+              speak('To do List 목록\n' + note.Todo, {
+                rate: 1,
+                pitch: 1.2,
+                lang: ko - KR,
+              })
+            "
+          >
+            <i class="fas fa-volume-up"></i>
+          </span>
+          <span
+            v-if="note.category != 'To-do List'"
+            class="text-to-speech"
+            @click="speak(note.text, { rate: 1, pitch: 1.2, lang: ko - KR })"
+          >
+            <i class="fas fa-volume-up"></i>
           </span>
 
           <span class="note-color" @click="modalColor(index)">
             <i class="fas fa-palette"></i>
           </span>
-          
+
           <div class="note-colorform" v-show="notes[index].is_show">
             <ul>
               <li class="color1" @click="setNoteColor(index, colors[0])"></li>
@@ -331,7 +410,20 @@
               <li class="color5" @click="setNoteColor(index, colors[4])"></li>
             </ul>
           </div>
-         
+
+          <div class="imageInputBox">
+            <form>
+              <input
+                class="imageInput"
+                type="file"
+                accept="image/*"
+                v-on:change="setImageFile($event)"
+              />
+            </form>
+            <button class="imageInputBtn" v-on:click="setFileExploer(index)">
+              이미지 업로드
+            </button>
+          </div>
         </div>
       </tr>
 
@@ -386,6 +478,8 @@ export default {
           is_bold: false,
           is_under: false,
           is_incli: false,
+          img_path: "",
+          contentModal: false,
         },
         {
           category: "To-do List",
@@ -402,12 +496,19 @@ export default {
           is_bold: false,
           is_under: false,
           is_incli: false,
+          img_path: "",
+          contentModal: false,
         },
       ],
       categorys: ["기본", "To-do List"],
       colors: ["#F4CCCC", "#EB9F9F", "#E7D9E7", "#FFF2CC", "#F2F2F2"],
       underbarCnt: 0,
       inclinationCnt: 0,
+      imgFile: null,
+      imgUrl: null,
+      imgIndex: -1,
+      fileReader: null,
+      test: null,
     };
   },
 
@@ -428,7 +529,9 @@ export default {
       listCount,
       is_bold,
       is_under,
-      is_incli
+      is_incli,
+      img_path,
+      contentModal
     ) {
       this.notes.push({
         category: category,
@@ -445,16 +548,25 @@ export default {
         is_bold: is_bold,
         is_under: is_under,
         is_incli: is_incli,
+        img_path: img_path,
+        contentModal: contentModal,
       });
       this.editorOpen = false;
     },
     deleteNote(index) {
       this.notes.splice(index, 1);
     },
-    deleteNoteContents(index){
-      this.notes[index].text="";
+    deleteNoteContents(index) {
+      this.notes[index].text = "";
+      this.notes[index].img_path = null;
     },
-    notesFilter: function(category,search) {
+    deleteContentModalIn(index) {
+      this.notes[index].contentModal = true;
+    },
+    deleteContentModalOut(index) {
+      this.notes[index].contentModal = false;
+    },
+    notesFilter: function(category, search) {
       return this.notes.filter(function(note) {
         return (
           (note.category == category || category == "") &&
@@ -501,40 +613,67 @@ export default {
     setInclination: function(index) {
       this.notes[index].is_incli = !this.notes[index].is_incli;
     },
-    speak(text, opt_prop){
-      if (typeof SpeechSynthesisUtterance === "undefined" || typeof window.speechSynthesis === "undefined") {
-                alert("이 브라우저는 음성 합성을 지원하지 않습니다.")
-                return
-            }    
-            window.speechSynthesis.cancel() // 현재 읽고있다면 초기화
-            const prop = opt_prop || {}
-            const speechMsg = new SpeechSynthesisUtterance()
-            speechMsg.rate = prop.rate || 1 // 속도: 0.1 ~ 10      
-            speechMsg.pitch = prop.pitch || 1 // 음높이: 0 ~ 2
-            speechMsg.lang = prop.lang || "ko-KR"
-            speechMsg.text = text           
-            // SpeechSynthesisUtterance에 저장된 내용을 바탕으로 음성합성 실행
-            window.speechSynthesis.speak(speechMsg)
+    speak(text, opt_prop) {
+      if (
+        typeof SpeechSynthesisUtterance === "undefined" ||
+        typeof window.speechSynthesis === "undefined"
+      ) {
+        alert("이 브라우저는 음성 합성을 지원하지 않습니다.");
+        return;
+      }
+      window.speechSynthesis.cancel(); // 현재 읽고있다면 초기화
+      const prop = opt_prop || {};
+      const speechMsg = new SpeechSynthesisUtterance();
+      speechMsg.rate = prop.rate || 1; // 속도: 0.1 ~ 10
+      speechMsg.pitch = prop.pitch || 1; // 음높이: 0 ~ 2
+      speechMsg.lang = prop.lang || "ko-KR";
+      speechMsg.text = text;
+      // SpeechSynthesisUtterance에 저장된 내용을 바탕으로 음성합성 실행
+      window.speechSynthesis.speak(speechMsg);
     },
-   speech_to_text(index){
-        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-        recognition.lang = 'ko-KR'; //선택하게 해줘야 할듯 .
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 5;
-        recognition.start();
-        recognition.onstart = function(){
-          console.log("음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요.") 
-        }; 
-        var self = this;
-        recognition.onresult = function(){
-          console.log('You said: ', event.results[0][0].transcript);
-          self.notes[index].text = self.notes[index].text+event.results[0][0].transcript;
-        };
+    speech_to_text(index) {
+      var recognition = new (window.SpeechRecognition ||
+        window.webkitSpeechRecognition ||
+        window.mozSpeechRecognition ||
+        window.msSpeechRecognition)();
+      recognition.lang = "ko-KR"; //선택하게 해줘야 할듯 .
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 5;
+      recognition.start();
+      recognition.onstart = function() {
+        console.log(
+          "음성인식이 시작 되었습니다. 이제 마이크에 무슨 말이든 하세요."
+        );
+      };
+      var self = this;
+      recognition.onresult = function() {
+        console.log("You said: ", event.results[0][0].transcript);
+        self.notes[index].text =
+          self.notes[index].text + event.results[0][0].transcript;
+      };
+    },
+    setFileExploer: function(index) {
+      console.log("setFileExploer!", index);
+      this.imgIndex = index;
+      document.querySelector(".imageInput").click();
+    },
+    setImageFile: function(event) {
+      this.imgFile = event.target.files;
+      console.log(this.imgFile);
+
+      this.fileReader = new FileReader();
+      console.log(this.fileReader);
+      this.fileReader.readAsDataURL(this.imgFile[0]);
+      this.fileReader.onload = event => {
+        // console.log(event.target.result);
+        this.imgUrl = event.target.result;
+        this.notes[this.imgIndex].img_path = this.imgUrl;
+      };
     },
   },
 
   mounted() {
-    if (localStorage.getItem("notes")){
+    if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
     }
     if (localStorage.getItem("categorys"))

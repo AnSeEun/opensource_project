@@ -335,9 +335,9 @@ textarea {
   margin: 0px 0px 30px 60px;
   //width: 100%;
   width: 300px;
-  height: 300px;
+  height: auto;
   background: #fff2cc;
-  padding: 20px 25px 25px 25px;
+  padding: 20px 25px 20px 25px;
   word-break: break-word;
   cursor: default;
   grid-row-end: span 1;
@@ -360,8 +360,8 @@ textarea {
   }
 
   &:hover {
-    transform: scale(1.05, 1.05);
-    opacity: 0.8;
+    transform: scale(1.03, 1.03);
+    opacity: 0.85;
 
     // .title-view {
     //   text-shadow : none;
@@ -374,10 +374,11 @@ textarea {
 }
 
 .note-textarea {
+  margin-top: 7px;
   padding-right: 7px;
   padding-left: 0px;
   width: 253px;
-  height: 160px;
+  height: auto;
   background-color: transparent;
   border: none;
   resize: none;
@@ -394,6 +395,53 @@ textarea {
     outline: none;
   }
 }
+
+.note-image-wrap {
+  width: 253px;
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.note-image {
+  text-align: center;
+  width: 250px;
+  height: auto;
+}
+
+.imageInputBox input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.imageInputBtn {
+  margin-top: 10px;
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #f2f2f2;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #7a6a6e;
+  outline: none;
+  transition: 0.3s;
+
+  &:hover {
+    transition: 0.5s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
+
 
 .textform-B {
   font-weight: bold;
@@ -596,7 +644,7 @@ textarea {
   width: 300px;
   height: 40px;
   right: 0px;
-  bottom: 43px;
+  bottom: 90px;
   z-index: 1;
   opacity: 0.6;
   transition: 0.2s;
@@ -728,6 +776,21 @@ textarea {
   &:active {
     color: #fc5e5e;
   }
+}
+
+.contentDeleteModal {
+  position: absolute;
+  top: 5px;
+  left: 240px;
+  width: 95px;
+  height: 23px;
+  padding: 1px;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+  background-color: #654b52;
+  opacity: 0.9;
+  color: #fff;
 }
 
 .note-favorite {
