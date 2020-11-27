@@ -81,6 +81,10 @@ export default {
       is_incli: false,
       img_path: "",
       contentModal: false,
+      lock: false,
+      model:null,
+      webcam:null,   
+      predicted:"",
     };
   },
   props: ["categorylist"],
@@ -103,7 +107,11 @@ export default {
         this.is_under,
         this.is_incli,
         this.img_path,
-        this.contentModal
+        this.contentModal,
+        this.lock,
+        this.model,
+        this.webcam,
+        this.predicted
       );
       this.category = "기본";
       this.nickname = "user";

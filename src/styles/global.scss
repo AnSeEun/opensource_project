@@ -409,6 +409,29 @@ textarea {
   height: auto;
 }
 
+.note-lock {
+  margin-top: 7px;
+  padding-right: 7px;
+  padding-left: 0px;
+  width: 253px;
+  height: 385px;
+  background-color: transparent;
+  border: none;
+  resize: none;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #654b52;
+  font-size: 15px;
+  letter-spacing: -0.7px;
+
+  &:hover {
+    outline: none;
+    cursor: default;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
 .imageInputBox input[type="file"] {
   position: absolute;
   width: 1px;
@@ -441,7 +464,6 @@ textarea {
     background-color: #eb9f9f;
   }
 }
-
 
 .textform-B {
   font-weight: bold;
@@ -598,6 +620,60 @@ textarea {
   transition: 0.3s;
 }
 
+.lock {
+  position: absolute;
+  right: 90px;
+  top: 130px;
+  color: #7a6a6e;
+  transition: 0.2s;
+}
+.defualt-lock {
+  margin-top: 10px;
+  top: 350px;
+  right: -10px;
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #f2f2f2;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #7a6a6e;
+  outline: none;
+  transition: 0.3s;
+
+  &:hover {
+    transition: 0.5s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
+
+.cam-lock {
+  margin: 10px;
+  right: -40px;
+  top: 350px;
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #f2f2f2;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #7a6a6e;
+  outline: none;
+  transition: 0.3s;
+
+  &:hover {
+    transition: 0.5s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
 .text-to-speech {
   position: absolute;
   right: 50px;

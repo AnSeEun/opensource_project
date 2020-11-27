@@ -171,6 +171,9 @@
                 placeholder="Take a note..."
               ></textarea>
             </div>
+            <div>
+              {{note.lock}}
+            </div>
             <hr />
             <span v-if="note.category != 'To-do List'">
               <span class="textform-B" @click="setBold(index)">B</span>
@@ -251,7 +254,7 @@
         class="note"
         :style="{ 'background-color': note.theme }"
       >
-        <div>
+        <div v-if="note.lock!=true">
           <span class="favorites">
             <i class="far fa-star" @click="addFavorite(index)"></i>
           </span>
@@ -356,6 +359,9 @@
               placeholder="Take a note..."
             ></textarea>
           </div>
+          <div>
+              {{note.lock}}
+          </div>
           <hr />
           <span v-if="note.category != 'To-do List'">
             <span class="textform-B" @click="setBold(index)">B</span>
@@ -423,7 +429,25 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
+            <button @click="setlock(index)">
+              락
+            </button>
+           
           </div>
+        </div>
+        <div v-else class="note-lock">
+          <div class="lock">
+            <i class="fas fa-lock fa-9x">
+          </i>
+          </div>
+          
+          <button class="defualt-lock" @click="setlock(index)">
+              락
+          </button>
+          <button class="cam-lock" @click="startCam(index)">
+              캠으로 열기
+          </button>
+          <div v-if=note.webcam id="cam"/><div v-if=note.webcam>This object is {{ note.predicted }} </div>
         </div>
       </tr>
 
@@ -451,6 +475,8 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
+//import * as tf from '@tensorflow/tfjs';
+import * as tmImage from '@teachablemachine/image';
 
 export default {
   name: "App",
@@ -480,6 +506,10 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          lock: false,
+          model:null,
+          webcam:null,   
+          predicted:"", 
         },
         {
           category: "To-do List",
@@ -498,6 +528,10 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          lock: false,
+          model:null,
+          webcam:null,   
+          predicted:"", 
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -531,7 +565,11 @@ export default {
       is_under,
       is_incli,
       img_path,
-      contentModal
+      contentModal,
+      lock,
+      model,
+      webcam,
+      predicted
     ) {
       this.notes.push({
         category: category,
@@ -550,6 +588,10 @@ export default {
         is_incli: is_incli,
         img_path: img_path,
         contentModal: contentModal,
+        lock: lock,
+        model: model,
+        webcam: webcam,
+        predicted: predicted
       });
       this.editorOpen = false;
     },
@@ -670,11 +712,37 @@ export default {
         this.notes[this.imgIndex].img_path = this.imgUrl;
       };
     },
+    setlock(index){
+      this.notes[index].lock = !this.notes[index].lock
+    },
+    async loop(index) {
+        this.notes[index].webcam.update(); // update the webcam frame
+        await this.notes[index].predict();
+        window.requestAnimationFrame(this.loop(index));
+    },   
+    async predict(index) {
+        // predict can take in an image, video or canvas html element
+        let prediction = await this.notes[index].model.predictTopK(this.notes[index].webcam.canvas,1,true);        
+        this.notes[index].predicted = prediction[0].className;
+    },
+    async startCam(index){
+        this.notes[index].webcam = new tmImage.Webcam(200,200,true);
+        await this.notes[index].webcam.setup(); // request access to the webcam
+        await this.notes[index].webcam.play();
+        
+        document.getElementById("cam").appendChild(this.notes[index].webcam.canvas);
+        window.requestAnimationFrame(this.loop(index));
+    },
+
   },
 
-  mounted() {
+  async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
+      let baseURL = 'https://teachablemachine.withgoogle.com/models/MZ4YFQ182/';
+      this.notes.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
+      let maxPredictions = this.notes.model.getTotalClasses();
+      console.log(maxPredictions);    
     }
     if (localStorage.getItem("categorys"))
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
