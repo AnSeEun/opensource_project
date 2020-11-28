@@ -82,9 +82,7 @@ export default {
       img_path: "",
       contentModal: false,
       lock: false,
-      model:null,
-      webcam:null,   
-      predicted:"",
+      mywebcam:null,   
     };
   },
   props: ["categorylist"],
@@ -109,9 +107,7 @@ export default {
         this.img_path,
         this.contentModal,
         this.lock,
-        this.model,
-        this.webcam,
-        this.predicted
+        this.mywebcam
       );
       this.category = "기본";
       this.nickname = "user";
@@ -126,6 +122,7 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
+      this.mywebcam=null;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

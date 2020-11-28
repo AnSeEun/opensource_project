@@ -444,10 +444,16 @@
           <button class="defualt-lock" @click="setlock(index)">
               락
           </button>
+          
           <button class="cam-lock" @click="startCam(index)">
               캠으로 열기
           </button>
-          <div v-if=note.webcam id="cam"/><div v-if=note.webcam>This object is {{ note.predicted }} </div>
+          <div class="webcam-modal-content" v-if=note.webcam id="cam">
+            </div>
+          
+          <div v-if=note.webcam>
+            This object is {{ note.predicted }} 
+          </div>
         </div>
       </tr>
 
@@ -488,6 +494,9 @@ export default {
       is_search: false,
       categorylist: false,
       categoryMain: false,
+      model:null,
+      webcam:null,   
+      predicted:"",
       notes: [
         {
           category: "기본",
@@ -507,9 +516,7 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          model:null,
-          webcam:null,   
-          predicted:"", 
+          webcam:null, 
         },
         {
           category: "To-do List",
@@ -529,9 +536,7 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          model:null,
-          webcam:null,   
-          predicted:"", 
+          webcam:null, 
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -567,9 +572,7 @@ export default {
       img_path,
       contentModal,
       lock,
-      model,
-      webcam,
-      predicted
+      mywebcam
     ) {
       this.notes.push({
         category: category,
@@ -589,9 +592,7 @@ export default {
         img_path: img_path,
         contentModal: contentModal,
         lock: lock,
-        model: model,
-        webcam: webcam,
-        predicted: predicted
+        mywebcam: mywebcam
       });
       this.editorOpen = false;
     },
@@ -715,23 +716,23 @@ export default {
     setlock(index){
       this.notes[index].lock = !this.notes[index].lock
     },
-    async loop(index) {
-        this.notes[index].webcam.update(); // update the webcam frame
-        await this.notes[index].predict();
-        window.requestAnimationFrame(this.loop(index));
+    async loop() {
+        this.webcam.update(); // update the webcam frame
+        await this.predict();
+        window.requestAnimationFrame(this.loop);
     },   
-    async predict(index) {
+    async predict() {
         // predict can take in an image, video or canvas html element
-        let prediction = await this.notes[index].model.predictTopK(this.notes[index].webcam.canvas,1,true);        
-        this.notes[index].predicted = prediction[0].className;
+        let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
+        this.predicted = prediction[0].className;
     },
     async startCam(index){
-        this.notes[index].webcam = new tmImage.Webcam(200,200,true);
-        await this.notes[index].webcam.setup(); // request access to the webcam
-        await this.notes[index].webcam.play();
-        
-        document.getElementById("cam").appendChild(this.notes[index].webcam.canvas);
-        window.requestAnimationFrame(this.loop(index));
+        this.webcam = new tmImage.Webcam(200,200,true);
+        await this.webcam.setup(); // request access to the webcam
+        await this.webcam.play();
+        this.notes[index].mywebcam = this.webcam;
+        document.getElementById("cam").appendChild(this.webcam.canvas);
+        window.requestAnimationFrame(this.loop);
     },
 
   },
