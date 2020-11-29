@@ -676,8 +676,9 @@ export default {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
     }
-    if (localStorage.getItem("categorys"))
+    if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
+    }
   },
 
   watch: {
