@@ -288,7 +288,10 @@
           />
           <p />
           <div v-if="note.img_path != null" class="note-image-wrap">
-            <img class="note-image" :src="note.img_path" />
+            <!--<img class="note-image" :src="note.img_path" />-->
+            <img id="image-test" src="./assets/dog.jpg" />
+            <button @click="predict">Let's predict!</button>
+            <h1>Class: {{ predicted }}</h1>
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
@@ -451,6 +454,9 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
+import * as cocoSSD from "@tensorflow-models/coco-ssd";
+//import * as tf from "@tensorflow/tfjs";
+let model;
 
 export default {
   name: "App",
@@ -509,6 +515,7 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
+      predicted: "",
     };
   },
 
@@ -670,6 +677,11 @@ export default {
         this.notes[this.imgIndex].img_path = this.imgUrl;
       };
     },
+    async predict() {
+      const img = document.getElementById("image-test");
+      let tmp = await model.detect(img);
+      this.predicted = tmp[0].class;
+    },
   },
 
   mounted() {
@@ -679,6 +691,10 @@ export default {
     if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
     }
+
+    model = await cocoSSD.load();
+
+    console.log("model loaded");
   },
 
   watch: {
