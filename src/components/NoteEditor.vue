@@ -81,6 +81,7 @@ export default {
       is_incli: false,
       img_path: "",
       contentModal: false,
+      predicted: "",
     };
   },
   props: ["categorylist"],
@@ -103,7 +104,8 @@ export default {
         this.is_under,
         this.is_incli,
         this.img_path,
-        this.contentModal
+        this.contentModal,
+        this.predicted,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -118,6 +120,7 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
+      this.predicted = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
