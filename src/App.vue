@@ -288,10 +288,10 @@
           />
           <p />
           <div v-if="note.img_path != null" class="note-image-wrap">
-            <!--<img class="note-image" :src="note.img_path" />-->
-            <img id="image-test" src="./assets/dog.jpg" />
-            <button @click="predict">Let's predict!</button>
-            <h1>Class: {{ predicted }}</h1>
+            <img id="detectedImage" class="note-image" :src="note.img_path" />
+            <!--<img id="image-test" src="./assets/dog.jpg" />-->
+            <button @click="predict(index)">Let's predict!</button>
+            <h1>Class: {{ note.predicted }}</h1>
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
@@ -455,7 +455,7 @@ import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
-//import * as tf from "@tensorflow/tfjs";
+import * as tf from "@tensorflow/tfjs";
 let model;
 
 export default {
@@ -486,6 +486,7 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          predicted: "",
         },
         {
           category: "To-do List",
@@ -504,6 +505,7 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          predicted: "",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -515,7 +517,7 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
-      predicted: "",
+      //predicted: "",
     };
   },
 
@@ -538,7 +540,8 @@ export default {
       is_under,
       is_incli,
       img_path,
-      contentModal
+      contentModal,
+      predicted,
     ) {
       this.notes.push({
         category: category,
@@ -557,6 +560,7 @@ export default {
         is_incli: is_incli,
         img_path: img_path,
         contentModal: contentModal,
+        predicted: predicted,
       });
       this.editorOpen = false;
     },
@@ -666,25 +670,39 @@ export default {
     },
     setImageFile: function(event) {
       this.imgFile = event.target.files;
-      console.log(this.imgFile);
+      //console.log(this.imgFile);
 
       this.fileReader = new FileReader();
-      console.log(this.fileReader);
+      //console.log(this.fileReader);
       this.fileReader.readAsDataURL(this.imgFile[0]);
       this.fileReader.onload = event => {
         // console.log(event.target.result);
         this.imgUrl = event.target.result;
         this.notes[this.imgIndex].img_path = this.imgUrl;
+        //console.log(this.notes[this.imgIndex].img_path);
       };
     },
-    async predict() {
-      const img = document.getElementById("image-test");
+    async predict(index) {
+      let img1 = new Image();
+      img1.src = this.notes[index].img_path;
+      //console.log(this.notes[index]);
+      //console.log(this.notes[index].img_path);
+      //console.log(img1);
+      //console.log(document.getElementById("detectedImage"));
+
+
+      const img = img1;
+      //const img = document.getElementById("detectedImage");
       let tmp = await model.detect(img);
-      this.predicted = tmp[0].class;
+      this.notes[index].predicted = tmp[0].class;
+      //console.log(this.notes[index].predicted);
+      console.log(index);
+      //console.log("index", index, img);
+      console.log(tf.log);
     },
   },
 
-  mounted() {
+  async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
     }
