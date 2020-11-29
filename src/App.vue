@@ -288,9 +288,9 @@
           />
           <p />
           <div v-if="note.img_path != null" class="note-image-wrap">
-            <img id="detectedImage" class="note-image" :src="note.img_path" />
+            <img @click="predict(index)" class="note-image" :src="note.img_path" />
             <!--<img id="image-test" src="./assets/dog.jpg" />-->
-            <button @click="predict(index)">Let's predict!</button>
+            <!--<button @click="predict(index)">Let's predict!</button>-->
             <h1>Class: {{ note.predicted }}</h1>
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
@@ -683,20 +683,14 @@ export default {
       };
     },
     async predict(index) {
-      let img1 = new Image();
-      img1.src = this.notes[index].img_path;
-      //console.log(this.notes[index]);
-      //console.log(this.notes[index].img_path);
-      //console.log(img1);
-      //console.log(document.getElementById("detectedImage"));
-
-
-      const img = img1;
-      //const img = document.getElementById("detectedImage");
+      let noteImage = new Image();
+      noteImage.src = this.notes[index].img_path;
+      const img = noteImage;
       let tmp = await model.detect(img);
       this.notes[index].predicted = tmp[0].class;
+      //const img = document.getElementById("detectedImage");
       //console.log(this.notes[index].predicted);
-      console.log(index);
+      //console.log(index);
       //console.log("index", index, img);
       console.log(tf.log);
     },
