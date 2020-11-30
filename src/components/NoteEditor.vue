@@ -36,7 +36,7 @@
         >
         </i>
       </div>
-
+    
       <textarea
         v-else
         rows="10"
@@ -53,6 +53,22 @@
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
+      <div>
+        노트 잠금 
+        <input type="radio" id="lock" v-bind:value=true v-model="lock">
+        <label for="lock">Yes</label>
+        <input type="radio" id="unlock" v-bind:value=false v-model="lock">
+        <label for="unlock">No</label>
+      </div>
+      <div v-if="lock">
+      <select v-model="lock_value">
+        <option>시계</option>
+        <option>나</option>
+        <option>blank</option>
+      </select>
+      </div>
+      
+      
     </tr>
   </div>
 </template>
@@ -82,7 +98,8 @@ export default {
       img_path: "",
       contentModal: false,
       lock: false,
-      mywebcam:null,   
+      predicted: "", 
+      lock_value:"",
     };
   },
   props: ["categorylist"],
@@ -107,7 +124,8 @@ export default {
         this.img_path,
         this.contentModal,
         this.lock,
-        this.mywebcam
+        this.predicted,
+        this.lock_value
       );
       this.category = "기본";
       this.nickname = "user";
@@ -122,7 +140,8 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
-      this.mywebcam=null;
+      this.predicted="";
+      this.lock_value="";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

@@ -468,15 +468,14 @@
               락
           </button>
           
+          <div class="webcam-modal-content" v-if=webcam id="cam"/>
+          <div v-if=webcam>
+            This object is {{ note.predicted }} 
+          </div>
           <button class="cam-lock" @click="startCam(index)">
               캠으로 열기
           </button>
-          <div class="webcam-modal-content" v-if=note.webcam id="cam">
-            </div>
-          
-          <div v-if=note.webcam>
-            This object is {{ note.predicted }} 
-          </div>
+
         </div>
       </tr>
 
@@ -504,7 +503,7 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
-import * as tf from '@tensorflow/tfjs';
+//import * as tf from '@tensorflow/tfjs';
 import * as tmImage from '@teachablemachine/image';
 
 export default {
@@ -536,6 +535,8 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
+          predicted:"",
+          lock_value:"",
         },
         {
           category: "To-do List",
@@ -555,6 +556,8 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
+          predicted:"",
+          lock_value:"",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -567,8 +570,7 @@ export default {
       fileReader: null,
       test: null,
       model:null,
-      webcam:null,   
-      predicted:"",
+      webcam:null,  
     };
   },
 
@@ -592,7 +594,9 @@ export default {
       is_incli,
       img_path,
       contentModal,
-      lock
+      lock,
+      predicted,
+      lock_value
     ) {
       this.notes.push({
         category: category,
@@ -611,7 +615,9 @@ export default {
         is_incli: is_incli,
         img_path: img_path,
         contentModal: contentModal,
-        lock: lock
+        lock: lock,
+        predicted: predicted,
+        lock_value: lock_value
       });
       this.editorOpen = false;
     },
@@ -735,22 +741,25 @@ export default {
     setlock(index){
       this.notes[index].lock = !this.notes[index].lock;
     },
-    async loop() {
+    async loop(index) {
         this.webcam.update(); // update the webcam frame
-        await this.predict();
-        window.requestAnimationFrame(this.loop);
+        await this.predict(index);
+        window.requestAnimationFrame(this.loop(index));
     },   
-    async predict() {
+    async predict(index) {
         // predict can take in an image, video or canvas html element
         let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
-        this.predicted = prediction[0].className;
+        this.notes[index].predicted = prediction[0].className;
+        if(this.notes[index].predicted == this.notes[index].lock_value){
+          this.notes[index].lock=false;
+        }
     },
-    async startCam(){
+    async startCam(index){
         this.webcam = new tmImage.Webcam(200,200,true);
         await this.webcam.setup(); // request access to the webcam
         await this.webcam.play();
         document.getElementById("cam").appendChild(this.webcam.canvas);
-        window.requestAnimationFrame(this.loop);
+        window.requestAnimationFrame(this.loop(index));
     },
 
   },
@@ -759,8 +768,8 @@ export default {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
       let baseURL = 'https://teachablemachine.withgoogle.com/models/jyw7NuwIB/';
-      this.notes.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
-      let maxPredictions = this.notes.model.getTotalClasses();
+      this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
+      let maxPredictions = this.model.getTotalClasses();
       console.log(maxPredictions);    
     }
     if (localStorage.getItem("categorys"))
