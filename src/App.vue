@@ -740,6 +740,7 @@ export default {
         this.notes[index].lock_predicted = prediction[0].className;
         if(this.notes[index].lock_predicted == this.notes[index].lock_value){
           this.notes[index].lock=false;
+          this.webcam.stop();
         }
     },
     async startCam(index){
