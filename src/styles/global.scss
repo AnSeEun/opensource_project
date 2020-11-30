@@ -401,6 +401,10 @@ textarea {
   max-height: 300px;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  &:active {
+    background-color: lawngreen;
+  }
 }
 
 .note-image {

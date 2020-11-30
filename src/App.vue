@@ -303,7 +303,10 @@
           />
           <p />
           <div v-if="note.img_path != null" class="note-image-wrap">
-            <img class="note-image" :src="note.img_path" />
+            <img @click="predict(index)" class="note-image" :src="note.img_path" />
+            <!--<img id="image-test" src="./assets/dog.jpg" />-->
+            <!--<button @click="predict(index)">Let's predict!</button>-->
+            <h1>Class: {{ note.predicted }}</h1>
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
@@ -449,7 +452,7 @@
 
          <div class="webcam-modal-content" v-if=webcam id="cam"/>
           <div v-if=webcam>
-            This object is {{ note.predicted }} 
+            This object is {{ note.lock_predicted }} 
           </div>
           <button class="cam-lock" @click="startCam(index)">
               캠으로 열기
@@ -482,9 +485,10 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
-//import * as tf from '@tensorflow/tfjs';
 import * as tmImage from '@teachablemachine/image';
-
+import * as cocoSSD from "@tensorflow-models/coco-ssd";
+import * as tf from "@tensorflow/tfjs";
+let model;
 export default {
   name: "App",
   data: function() {
@@ -514,8 +518,9 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          predicted:"",
+          lock_predicted:"",
           lock_value:"",
+          predicted: "",
         },
         {
           category: "To-do List",
@@ -535,8 +540,9 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          predicted:"",
+          lock_predicted:"",
           lock_value:"",
+          predicted: "",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -574,8 +580,9 @@ export default {
       img_path,
       contentModal,
       lock,
+      lock_predicted,
+      lock_value,
       predicted,
-      lock_value
     ) {
       this.notes.push({
         category: category,
@@ -595,8 +602,9 @@ export default {
         img_path: img_path,
         contentModal: contentModal,
         lock: lock,
+        lock_predicted: lock_predicted,
+        lock_value: lock_value,
         predicted: predicted,
-        lock_value: lock_value
       });
       this.editorOpen = false;
     },
@@ -706,15 +714,16 @@ export default {
     },
     setImageFile: function(event) {
       this.imgFile = event.target.files;
-      console.log(this.imgFile);
+      //console.log(this.imgFile);
 
       this.fileReader = new FileReader();
-      console.log(this.fileReader);
+      //console.log(this.fileReader);
       this.fileReader.readAsDataURL(this.imgFile[0]);
       this.fileReader.onload = event => {
         // console.log(event.target.result);
         this.imgUrl = event.target.result;
         this.notes[this.imgIndex].img_path = this.imgUrl;
+        //console.log(this.notes[this.imgIndex].img_path);
       };
     },
     setlock(index){
@@ -722,14 +731,14 @@ export default {
     },
     async loop(index) {
         this.webcam.update(); // update the webcam frame
-        await this.predict(index);
+        await this.lock_predict(index);
         window.requestAnimationFrame(this.loop(index));
     },   
-    async predict(index) {
+    async lock_predict(index) {
         // predict can take in an image, video or canvas html element
         let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
-        this.notes[index].predicted = prediction[0].className;
-        if(this.notes[index].predicted == this.notes[index].lock_value){
+        this.notes[index].lock_predicted = prediction[0].className;
+        if(this.notes[index].lock_predicted == this.notes[index].lock_value){
           this.notes[index].lock=false;
         }
     },
@@ -741,6 +750,18 @@ export default {
         window.requestAnimationFrame(this.loop(index));
     },
 
+    async predict(index) {
+      let noteImage = new Image();
+      noteImage.src = this.notes[index].img_path;
+      const img = noteImage;
+      let tmp = await model.detect(img);
+      this.notes[index].predicted = tmp[0].class;
+      //const img = document.getElementById("detectedImage");
+      //console.log(this.notes[index].predicted);
+      //console.log(index);
+      //console.log("index", index, img);
+      console.log(tf.log);
+    },
   },
 
   async mounted() {
@@ -751,8 +772,13 @@ export default {
       let maxPredictions = this.model.getTotalClasses();
       console.log(maxPredictions);    
     }
-    if (localStorage.getItem("categorys"))
+    if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
+    }
+
+    model = await cocoSSD.load();
+
+    console.log("model loaded");
   },
 
   watch: {

@@ -98,8 +98,9 @@ export default {
       img_path: "",
       contentModal: false,
       lock: false,
-      predicted: "", 
+      lock_predicted: "", 
       lock_value:"",
+      predicted: "",
     };
   },
   props: ["categorylist"],
@@ -124,8 +125,9 @@ export default {
         this.img_path,
         this.contentModal,
         this.lock,
+        this.lock_predicted,
+        this.lock_value,
         this.predicted,
-        this.lock_value
       );
       this.category = "기본";
       this.nickname = "user";
@@ -140,8 +142,9 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
-      this.predicted="";
+      this.lock_predicted="";
       this.lock_value="";
+      this.predicted = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
