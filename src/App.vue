@@ -171,9 +171,6 @@
                 placeholder="Take a note..."
               ></textarea>
             </div>
-            <div>
-              {{note.lock}}
-            </div>
             <hr />
             <span v-if="note.category != 'To-do List'">
               <span class="textform-B" @click="setBold(index)">B</span>
@@ -239,9 +236,7 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
-              <button @click="setlock(index)">
-                락
-              </button>
+        
             </div>
           </div>
           <div v-else class="note-lock">
@@ -250,19 +245,13 @@
           </i>
           </div>
           
-          <button class="defualt-lock" @click="setlock(index)">
-              락
-          </button>
-          
+           <div class="webcam-modal-content" v-if=webcam id="cam"/>
+          <div v-if=webcam>
+            This object is {{ note.predicted }} 
+          </div>
           <button class="cam-lock" @click="startCam(index)">
               캠으로 열기
           </button>
-          <div class="webcam-modal-content" v-if=note.webcam id="cam">
-            </div>
-          
-          <div v-if=note.webcam>
-            This object is {{ note.predicted }} 
-          </div>
         </div>
         </tr>
       </div>
@@ -382,9 +371,6 @@
               placeholder="Take a note..."
             ></textarea>
           </div>
-          <div>
-              {{note.lock}}
-          </div>
           <hr />
           <span v-if="note.category != 'To-do List'">
             <span class="textform-B" @click="setBold(index)">B</span>
@@ -452,9 +438,6 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-            <button @click="setlock(index)">
-              락
-            </button>
            
           </div>
         </div>
@@ -463,12 +446,8 @@
             <i class="fas fa-lock fa-9x">
           </i>
           </div>
-          
-          <button class="defualt-lock" @click="setlock(index)">
-              락
-          </button>
-          
-          <div class="webcam-modal-content" v-if=webcam id="cam"/>
+
+         <div class="webcam-modal-content" v-if=webcam id="cam"/>
           <div v-if=webcam>
             This object is {{ note.predicted }} 
           </div>
@@ -767,7 +746,7 @@ export default {
   async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
-      let baseURL = 'https://teachablemachine.withgoogle.com/models/jyw7NuwIB/';
+      let baseURL = 'https://teachablemachine.withgoogle.com/models/2gjfih4wi/';
       this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
       let maxPredictions = this.model.getTotalClasses();
       console.log(maxPredictions);    

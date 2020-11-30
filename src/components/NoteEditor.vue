@@ -62,9 +62,9 @@
       </div>
       <div v-if="lock">
       <select v-model="lock_value">
+        <option>휴대폰</option>
+        <option>핸드크림</option>
         <option>시계</option>
-        <option>나</option>
-        <option>blank</option>
       </select>
       </div>
       
