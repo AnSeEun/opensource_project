@@ -60,7 +60,7 @@
           class="note"
           :style="{ 'background-color': note.theme }"
         >
-          <div>
+          <div v-if="note.lock!=true">
             <span class="favorites">
               <!-- <i
                 class="far fa-star"
@@ -239,8 +239,31 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
+              <button @click="setlock(index)">
+                락
+              </button>
             </div>
           </div>
+          <div v-else class="note-lock">
+          <div class="lock">
+            <i class="fas fa-lock fa-9x">
+          </i>
+          </div>
+          
+          <button class="defualt-lock" @click="setlock(index)">
+              락
+          </button>
+          
+          <button class="cam-lock" @click="startCam(index)">
+              캠으로 열기
+          </button>
+          <div class="webcam-modal-content" v-if=note.webcam id="cam">
+            </div>
+          
+          <div v-if=note.webcam>
+            This object is {{ note.predicted }} 
+          </div>
+        </div>
         </tr>
       </div>
 
@@ -481,7 +504,7 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
-//import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 import * as tmImage from '@teachablemachine/image';
 
 export default {
@@ -494,9 +517,6 @@ export default {
       is_search: false,
       categorylist: false,
       categoryMain: false,
-      model:null,
-      webcam:null,   
-      predicted:"",
       notes: [
         {
           category: "기본",
@@ -516,7 +536,6 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          webcam:null, 
         },
         {
           category: "To-do List",
@@ -536,7 +555,6 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          webcam:null, 
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -548,6 +566,9 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
+      model:null,
+      webcam:null,   
+      predicted:"",
     };
   },
 
@@ -571,8 +592,7 @@ export default {
       is_incli,
       img_path,
       contentModal,
-      lock,
-      mywebcam
+      lock
     ) {
       this.notes.push({
         category: category,
@@ -591,8 +611,7 @@ export default {
         is_incli: is_incli,
         img_path: img_path,
         contentModal: contentModal,
-        lock: lock,
-        mywebcam: mywebcam
+        lock: lock
       });
       this.editorOpen = false;
     },
@@ -714,7 +733,7 @@ export default {
       };
     },
     setlock(index){
-      this.notes[index].lock = !this.notes[index].lock
+      this.notes[index].lock = !this.notes[index].lock;
     },
     async loop() {
         this.webcam.update(); // update the webcam frame
@@ -726,11 +745,10 @@ export default {
         let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
         this.predicted = prediction[0].className;
     },
-    async startCam(index){
+    async startCam(){
         this.webcam = new tmImage.Webcam(200,200,true);
         await this.webcam.setup(); // request access to the webcam
         await this.webcam.play();
-        this.notes[index].mywebcam = this.webcam;
         document.getElementById("cam").appendChild(this.webcam.canvas);
         window.requestAnimationFrame(this.loop);
     },
@@ -740,7 +758,7 @@ export default {
   async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
-      let baseURL = 'https://teachablemachine.withgoogle.com/models/MZ4YFQ182/';
+      let baseURL = 'https://teachablemachine.withgoogle.com/models/jyw7NuwIB/';
       this.notes.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
       let maxPredictions = this.notes.model.getTotalClasses();
       console.log(maxPredictions);    
