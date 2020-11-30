@@ -60,7 +60,7 @@
           class="note"
           :style="{ 'background-color': note.theme }"
         >
-          <div>
+          <div v-if="note.lock!=true">
             <span class="favorites">
               <!-- <i
                 class="far fa-star"
@@ -236,8 +236,23 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
+        
             </div>
           </div>
+          <div v-else class="note-lock">
+          <div class="lock">
+            <i class="fas fa-lock fa-9x">
+          </i>
+          </div>
+          
+           <div class="webcam-modal-content" v-if=webcam id="cam"/>
+          <div v-if=webcam>
+            This object is {{ note.predicted }} 
+          </div>
+          <button class="cam-lock" @click="startCam(index)">
+              캠으로 열기
+          </button>
+        </div>
         </tr>
       </div>
 
@@ -251,7 +266,7 @@
         class="note"
         :style="{ 'background-color': note.theme }"
       >
-        <div>
+        <div v-if="note.lock!=true">
           <span class="favorites">
             <i class="far fa-star" @click="addFavorite(index)"></i>
           </span>
@@ -426,7 +441,23 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
+           
           </div>
+        </div>
+        <div v-else class="note-lock">
+          <div class="lock">
+            <i class="fas fa-lock fa-9x">
+          </i>
+          </div>
+
+         <div class="webcam-modal-content" v-if=webcam id="cam"/>
+          <div v-if=webcam>
+            This object is {{ note.lock_predicted }} 
+          </div>
+          <button class="cam-lock" @click="startCam(index)">
+              캠으로 열기
+          </button>
+
         </div>
       </tr>
 
@@ -454,10 +485,10 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
+import * as tmImage from '@teachablemachine/image';
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 let model;
-
 export default {
   name: "App",
   data: function() {
@@ -486,6 +517,9 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          lock: false,
+          lock_predicted:"",
+          lock_value:"",
           predicted: "",
         },
         {
@@ -505,6 +539,9 @@ export default {
           is_incli: false,
           img_path: "",
           contentModal: false,
+          lock: false,
+          lock_predicted:"",
+          lock_value:"",
           predicted: "",
         },
       ],
@@ -517,7 +554,8 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
-      //predicted: "",
+      model:null,
+      webcam:null,  
     };
   },
 
@@ -541,6 +579,9 @@ export default {
       is_incli,
       img_path,
       contentModal,
+      lock,
+      lock_predicted,
+      lock_value,
       predicted,
     ) {
       this.notes.push({
@@ -560,6 +601,9 @@ export default {
         is_incli: is_incli,
         img_path: img_path,
         contentModal: contentModal,
+        lock: lock,
+        lock_predicted: lock_predicted,
+        lock_value: lock_value,
         predicted: predicted,
       });
       this.editorOpen = false;
@@ -682,6 +726,31 @@ export default {
         //console.log(this.notes[this.imgIndex].img_path);
       };
     },
+    setlock(index){
+      this.notes[index].lock = !this.notes[index].lock;
+    },
+    async loop(index) {
+        this.webcam.update(); // update the webcam frame
+        await this.lock_predict(index);
+        window.requestAnimationFrame(this.loop(index));
+    },   
+    async lock_predict(index) {
+        // predict can take in an image, video or canvas html element
+        let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
+        this.notes[index].lock_predicted = prediction[0].className;
+        if(this.notes[index].lock_predicted == this.notes[index].lock_value){
+          this.notes[index].lock=false;
+          this.webcam.stop();
+        }
+    },
+    async startCam(index){
+        this.webcam = new tmImage.Webcam(200,200,true);
+        await this.webcam.setup(); // request access to the webcam
+        await this.webcam.play();
+        document.getElementById("cam").appendChild(this.webcam.canvas);
+        window.requestAnimationFrame(this.loop(index));
+    },
+
     async predict(index) {
       let noteImage = new Image();
       noteImage.src = this.notes[index].img_path;
@@ -699,6 +768,10 @@ export default {
   async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
+      let baseURL = 'https://teachablemachine.withgoogle.com/models/2gjfih4wi/';
+      this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
+      let maxPredictions = this.model.getTotalClasses();
+      console.log(maxPredictions);    
     }
     if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
