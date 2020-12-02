@@ -63,8 +63,9 @@
       <div v-if="lock">
       <select v-model="lock_value">
         <option>휴대폰</option>
-        <option>핸드크림</option>
-        <option>시계</option>
+        <option>머그컵</option>
+        <option>마우스</option>
+        <option>키보드</option>
       </select>
       </div>
       
@@ -98,9 +99,11 @@ export default {
       img_path: "",
       contentModal: false,
       lock: false,
+      lock_answer:false,
       lock_predicted: "", 
       lock_value:"",
       predicted: "",
+      webcam: null,
     };
   },
   props: ["categorylist"],
@@ -125,9 +128,11 @@ export default {
         this.img_path,
         this.contentModal,
         this.lock,
+        this.lock_answer,
         this.lock_predicted,
         this.lock_value,
         this.predicted,
+        this.webcam,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -145,6 +150,7 @@ export default {
       this.lock_predicted="";
       this.lock_value="";
       this.predicted = "";
+      this.webcam=null;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
