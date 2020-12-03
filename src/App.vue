@@ -239,20 +239,7 @@
         
             </div>
           </div>
-          <div v-else class="note-lock">
-          <div class="lock">
-            <i class="fas fa-lock fa-9x">
-          </i>
-          </div>
           
-           <div class="webcam-modal-content" v-if=webcam id="cam"/>
-          <div v-if=webcam>
-            This object is {{ note.predicted }} 
-          </div>
-          <button class="cam-lock" @click="startCam(index)">
-              캠으로 열기
-          </button>
-        </div>
         </tr>
       </div>
 
@@ -441,7 +428,29 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-           
+            
+              
+              <div>
+              노트 잠금 
+              <input type="radio" id="lock" v-bind:value=true v-model="note.lock_answer">
+              <label for="lock">Yes</label>
+              <input type="radio" id="unlock" v-bind:value=false v-model="note.lock_answer">
+              <label for="unlock">No</label>
+              </div>
+              <span v-if="note.lock_answer">
+                <select v-model="note.lock_value">
+                <option>휴대폰</option>
+                <option>머그컵</option>
+                <option>마우스</option>
+                <option>키보드</option>
+                </select>
+                <span v-if="note.lock_value!=''">
+                  <button @click="setlock(index)">잠금</button>
+                </span>
+              </span>
+              
+
+
           </div>
         </div>
         <div v-else class="note-lock">
@@ -450,14 +459,18 @@
           </i>
           </div>
 
-         <div class="webcam-modal-content" v-if=webcam id="cam"/>
-          <div v-if=webcam>
-            This object is {{ note.lock_predicted }} 
+         <div class="webcam-modal-content" v-if=note.webcam id="cam"/>
+          <div v-if=note.webcam>
+            This object is {{ note.lock_predicted }} <br>
+            answer: {{note.lock_value}}
+            <button @click="endCam(index)">
+            취소
+          </button>
           </div>
           <button class="cam-lock" @click="startCam(index)">
               캠으로 열기
           </button>
-
+      
         </div>
       </tr>
 
@@ -518,9 +531,11 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
+          lock_answer:false,
           lock_predicted:"",
           lock_value:"",
           predicted: "",
+          webcam:null,
         },
         {
           category: "To-do List",
@@ -543,6 +558,7 @@ export default {
           lock_predicted:"",
           lock_value:"",
           predicted: "",
+          webcam:null,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -555,7 +571,7 @@ export default {
       fileReader: null,
       test: null,
       model:null,
-      webcam:null,  
+        
     };
   },
 
@@ -580,9 +596,11 @@ export default {
       img_path,
       contentModal,
       lock,
+      lock_answer,
       lock_predicted,
       lock_value,
       predicted,
+      webcam,
     ) {
       this.notes.push({
         category: category,
@@ -602,9 +620,11 @@ export default {
         img_path: img_path,
         contentModal: contentModal,
         lock: lock,
+        lock_answer:lock_answer,
         lock_predicted: lock_predicted,
         lock_value: lock_value,
         predicted: predicted,
+        webcam: webcam,
       });
       this.editorOpen = false;
     },
@@ -727,28 +747,34 @@ export default {
       };
     },
     setlock(index){
-      this.notes[index].lock = !this.notes[index].lock;
+      this.notes[index].lock = true;
     },
     async loop(index) {
-        this.webcam.update(); // update the webcam frame
+        this.notes[index].webcam.update(); // update the webcam frame
         await this.lock_predict(index);
-        window.requestAnimationFrame(this.loop(index));
+        window.requestAnimationFrame(this.loop(index));       
     },   
     async lock_predict(index) {
         // predict can take in an image, video or canvas html element
-        let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);        
+        let prediction = await this.model.predictTopK(this.notes[index].webcam.canvas,1,true);        
         this.notes[index].lock_predicted = prediction[0].className;
         if(this.notes[index].lock_predicted == this.notes[index].lock_value){
           this.notes[index].lock=false;
-          this.webcam.stop();
+          this.notes[index].lock_predicted = "";
+          this.notes[index].lock_answer=false;
+          this.notes[index].webcam= null;
+          
         }
     },
     async startCam(index){
-        this.webcam = new tmImage.Webcam(200,200,true);
-        await this.webcam.setup(); // request access to the webcam
-        await this.webcam.play();
-        document.getElementById("cam").appendChild(this.webcam.canvas);
+        this.notes[index].webcam = new tmImage.Webcam(200,200,true);
+        await this.notes[index].webcam.setup(); // request access to the webcam
+
+        await this.notes[index].webcam.play();
+        document.getElementById("cam").appendChild(this.notes[index].webcam.canvas);
+       //if(this.notes[index].lock){
         window.requestAnimationFrame(this.loop(index));
+       //
     },
 
     async predict(index) {
@@ -763,12 +789,17 @@ export default {
       //console.log("index", index, img);
       console.log(tf.log);
     },
+
+    endCam(index){
+      this.notes[index].webcam=null;
+      this.notes[index].lock_predicted = "";
+    }
   },
 
   async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
-      let baseURL = 'https://teachablemachine.withgoogle.com/models/2gjfih4wi/';
+      let baseURL = 'https://teachablemachine.withgoogle.com/models/OsUYBFECF/';
       this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
       let maxPredictions = this.model.getTotalClasses();
       console.log(maxPredictions);    
