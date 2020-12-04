@@ -827,6 +827,11 @@ export default {
             header[i].style["background-color"]='#F7BE81'
           }
         }
+        else if(this.weather[0].description==='흐림'){
+          for(var j=0; j<header.length; j++){
+            header[i].style["background-color"]='#BDBDBD'
+          }
+        }
         
       })
 
