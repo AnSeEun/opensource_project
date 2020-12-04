@@ -8,7 +8,7 @@
               도시명 : {{city}} 
               현재 온도: {{temp.toFixed(2)}}º 
               체감 온도: {{feels_like.toFixed(2)}}º 
-              날씨:{{weather[0].description}} 
+              날씨:{{weather[0].description}}
            </div>
       <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
     </div>
@@ -821,7 +821,16 @@ export default {
         this.feels_like = result.data.main.feels_like - 273.15
         this.weather = result.data.weather
         this.view=true
+        var header = document.getElementsByClassName("header");
+        if(this.weather[0].description==='맑음'){
+          for(var i=0; i<header.length; i++){
+            header[i].style["background-color"]='#F7BE81'
+          }
+        }
+        
       })
+
+      
     },
 
     getMap(){
@@ -833,6 +842,8 @@ export default {
           });
       }
     },
+
+
   },
 
   async mounted() {
@@ -852,6 +863,7 @@ export default {
 
     console.log("model loaded");
     this.searchWeather();
+
   },
 
   watch: {
