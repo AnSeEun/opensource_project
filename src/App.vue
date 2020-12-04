@@ -3,9 +3,16 @@
     <div class="header">
       <img src="./assets/hellos_logo.png" />
       <p><a href="javascript:location.reload()">Note Knock</a></p>
+            <div v-if="view">
+              국가명: {{country}} 
+              도시명 : {{city}} 
+              현재 온도: {{temp.toFixed(2)}}º 
+              체감 온도: {{feels_like.toFixed(2)}}º 
+              날씨:{{weather[0].description}}
+           </div>
       <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
     </div>
-    <div>
+    <div>   
       <select class="category-filter" v-model="selected">
         <option value="">전체</option>
         <option v-for="list in categorys" :key="list">
@@ -468,6 +475,7 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
+<<<<<<< HEAD
             <button class="lockBtn">노트 잠금</button>
             <div class="locknoteModal">
               <span class="locknote">
@@ -502,6 +510,26 @@
                 </div>
               </span>
             </div>
+=======
+            <div>
+              노트 잠금 
+              <input type="radio" id="lock" v-bind:value=true v-model="note.lock_answer">
+              <label for="lock">Yes</label>
+              <input type="radio" id="unlock" v-bind:value=false v-model="note.lock_answer">
+              <label for="unlock">No</label>
+            </div>
+              <span v-if="note.lock_answer">
+                <select v-model="note.lock_value">
+                <option>휴대폰</option>
+                <option>머그컵</option>
+                <option>마우스</option>
+                <option>키보드</option>
+                </select>
+                <span v-if="note.lock_value!=''">
+                  <button @click="setlock(index)">잠금</button>
+                </span>
+              </span>
+>>>>>>> b763e597803bfc7fb32be36348c2aca21a54a516
           </div>
         </div>
         <div v-else class="note-lock">
@@ -509,10 +537,15 @@
             <i class="fas fa-lock fa-9x"> </i>
           </div>
 
+<<<<<<< HEAD
           <div class="webcam-modal-content" v-if="note.webcam" id="cam" />
           <div v-if="note.webcam">
             This object is {{ note.lock_predicted }} <br />
             answer: {{ note.lock_value }}
+=======
+         <div class="webcam-modal-content" v-if=note.webcam id="cam"/>
+          <div v-if=note.webcam>
+>>>>>>> b763e597803bfc7fb32be36348c2aca21a54a516
             <button @click="endCam(index)">
               취소
             </button>
@@ -550,7 +583,12 @@ import categoryadd from "./components/CategoryAdd.vue";
 import * as tmImage from "@teachablemachine/image";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
+var Vue = require('vue/dist/vue')
+import VueResource from 'vue-resource';
+Vue.use(VueResource);
+
 let model;
+
 export default {
   name: "App",
   data: function() {
@@ -619,12 +657,28 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
+<<<<<<< HEAD
       model: null,
       //lockModal: false,
+=======
+      model:null,
+      view: false,
+      country: '',
+      city: '',
+      temp:'',
+      feels_like:'',
+      weather:'',
+      lat:'',
+      lon:'',
+>>>>>>> b763e597803bfc7fb32be36348c2aca21a54a516
     };
   },
 
-  computed: {},
+  computed: {
+    hasResult: function(){
+      return this.posts.length > 0
+    }
+  },
 
   methods: {
     newNote(
@@ -848,9 +902,52 @@ export default {
       this.notes[index].webcam = null;
       this.notes[index].lock_predicted = "";
     },
+<<<<<<< HEAD
+=======
+
+    searchWeather(){
+      const BASE_URL = 'http://api.openweathermap.org/data/2.5/weather?lat='+this.lat+'&lon='+this.lon+'&lang=kr&appid=95e8423951820d94ae0f14e1d78c5f86';
+      Vue.http.get(`${BASE_URL}`)
+      .then((result)=>{
+        this.country = result.data.sys.country
+        this.city = result.data.name
+        this.temp = result.data.main.temp - 273.15
+        this.feels_like = result.data.main.feels_like - 273.15
+        this.weather = result.data.weather
+        this.view=true
+        var header = document.getElementsByClassName("header");
+        if(this.weather[0].description==='맑음'){
+          for(var i=0; i<header.length; i++){
+            header[i].style["background-color"]='#F7BE81'
+          }
+        }
+        else if(this.weather[0].description==='흐림'){
+          for(var j=0; j<header.length; j++){
+            header[i].style["background-color"]='#BDBDBD'
+          }
+        }
+        
+      })
+
+      
+    },
+
+    getMap(){
+      if (navigator.geolocation) {
+        var self = this;
+          navigator.geolocation.getCurrentPosition(function(position) {       
+              self.lat = position.coords.latitude, // 위도
+              self.lon = position.coords.longitude; // 경도
+          });
+      }
+    },
+
+
+>>>>>>> b763e597803bfc7fb32be36348c2aca21a54a516
   },
 
   async mounted() {
+    this.getMap();
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
       let baseURL = "https://teachablemachine.withgoogle.com/models/OsUYBFECF/";
@@ -868,6 +965,8 @@ export default {
     model = await cocoSSD.load();
 
     console.log("model loaded");
+    this.searchWeather();
+
   },
 
   watch: {
