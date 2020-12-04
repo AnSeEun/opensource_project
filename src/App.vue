@@ -822,14 +822,15 @@ export default {
         this.weather = result.data.weather
         this.view=true
         var header = document.getElementsByClassName("header");
-        if(this.weather[0].description==='맑음'){
+        
+        if(this.weather[0].description==='비'){
           for(var i=0; i<header.length; i++){
             header[i].style["background-color"]='#F7BE81'
           }
         }
         else if(this.weather[0].description==='흐림'){
           for(var j=0; j<header.length; j++){
-            header[i].style["background-color"]='#BDBDBD'
+            header[j].style["background-color"]='gray'
           }
         }
         
@@ -863,11 +864,12 @@ export default {
     if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
     }
-
+   
     model = await cocoSSD.load();
 
     console.log("model loaded");
-    this.searchWeather();
+  
+     this.searchWeather();
 
   },
 
