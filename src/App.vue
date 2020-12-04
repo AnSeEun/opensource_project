@@ -585,10 +585,9 @@
               </div>
             </transition>
 
-            <!--
             <span class="note-camera">
               <i class="fas fa-camera" @click="setCaptureCam(index)"></i>
-            </span>-->
+            </span>
           </div>
         </div>
 
