@@ -60,7 +60,7 @@
           class="note"
           :style="{ 'background-color': note.theme }"
         >
-          <div v-if="note.lock!=true">
+          <div v-if="note.lock != true">
             <span class="favorites">
               <!-- <i
                 class="far fa-star"
@@ -101,10 +101,19 @@
               placeholder="Title"
             />
             <p />
-            <div v-if="note.img_path != null" class="note-image-wrap">
+            <!-- <div v-if="note.img_path != null" class="note-image-wrap">
               <img class="note-image" :src="note.img_path" />
+            </div> -->
+            <div v-if="note.img_path != null" class="note-image-wrap">
+              <img
+                @click="predict(index)"
+                class="note-image"
+                :src="note.img_path"
+              />
+              <!--<img id="image-test" src="./assets/dog.jpg" />-->
+              <!--<button @click="predict(index)">Let's predict!</button>-->
+              <h1>Class: {{ note.predicted }}</h1>
             </div>
-
             <div v-if="note.category === 'To-do List'" id="checkbox">
               <div v-for="index in note.listCount" :key="index">
                 <input
@@ -236,10 +245,37 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
-        
+
+              <div>
+                노트 잠금
+                <input
+                  type="radio"
+                  id="lock"
+                  v-bind:value="true"
+                  v-model="note.lock_answer"
+                />
+                <label for="lock">Yes</label>
+                <input
+                  type="radio"
+                  id="unlock"
+                  v-bind:value="false"
+                  v-model="note.lock_answer"
+                />
+                <label for="unlock">No</label>
+              </div>
+              <span v-if="note.lock_answer">
+                <select v-model="note.lock_value">
+                  <option>휴대폰</option>
+                  <option>머그컵</option>
+                  <option>마우스</option>
+                  <option>키보드</option>
+                </select>
+                <span v-if="note.lock_value != ''">
+                  <button @click="setlock(index)">잠금</button>
+                </span>
+              </span>
             </div>
           </div>
-          
         </tr>
       </div>
 
@@ -253,7 +289,7 @@
         class="note"
         :style="{ 'background-color': note.theme }"
       >
-        <div v-if="note.lock!=true">
+        <div v-if="note.lock != true">
           <span class="favorites">
             <i class="far fa-star" @click="addFavorite(index)"></i>
           </span>
@@ -290,7 +326,11 @@
           />
           <p />
           <div v-if="note.img_path != null" class="note-image-wrap">
-            <img @click="predict(index)" class="note-image" :src="note.img_path" />
+            <img
+              @click="predict(index)"
+              class="note-image"
+              :src="note.img_path"
+            />
             <!--<img id="image-test" src="./assets/dog.jpg" />-->
             <!--<button @click="predict(index)">Let's predict!</button>-->
             <h1>Class: {{ note.predicted }}</h1>
@@ -428,49 +468,58 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-            
-              
-              <div>
-              노트 잠금 
-              <input type="radio" id="lock" v-bind:value=true v-model="note.lock_answer">
-              <label for="lock">Yes</label>
-              <input type="radio" id="unlock" v-bind:value=false v-model="note.lock_answer">
-              <label for="unlock">No</label>
-              </div>
-              <span v-if="note.lock_answer">
-                <select v-model="note.lock_value">
-                <option>휴대폰</option>
-                <option>머그컵</option>
-                <option>마우스</option>
-                <option>키보드</option>
-                </select>
-                <span v-if="note.lock_value!=''">
-                  <button @click="setlock(index)">잠금</button>
-                </span>
+            <button class="lockBtn">노트 잠금</button>
+            <div class="locknoteModal">
+              <span class="locknote">
+                <h3>노트 잠금</h3>
+                <div>
+                  <input
+                    type="radio"
+                    id="lock"
+                    v-bind:value="true"
+                    v-model="note.lock_answer"
+                  />
+                  <label for="lock">Yes</label>
+                  <input
+                    type="radio"
+                    id="unlock"
+                    v-bind:value="false"
+                    v-model="note.lock_answer"
+                  />
+                  <label for="unlock">No</label>
+                </div>
+                <div v-if="note.lock_answer">
+                  lock Key
+                  <select v-model="note.lock_value">
+                    <option>휴대폰</option>
+                    <option>머그컵</option>
+                    <option>마우스</option>
+                    <option>키보드</option>
+                  </select>
+                  <span v-if="note.lock_value != ''">
+                    <button @click="setlock(index)">잠금</button>
+                  </span>
+                </div>
               </span>
-              
-
-
+            </div>
           </div>
         </div>
         <div v-else class="note-lock">
           <div class="lock">
-            <i class="fas fa-lock fa-9x">
-          </i>
+            <i class="fas fa-lock fa-9x"> </i>
           </div>
 
-         <div class="webcam-modal-content" v-if=note.webcam id="cam"/>
-          <div v-if=note.webcam>
-            This object is {{ note.lock_predicted }} <br>
-            answer: {{note.lock_value}}
+          <div class="webcam-modal-content" v-if="note.webcam" id="cam" />
+          <div v-if="note.webcam">
+            This object is {{ note.lock_predicted }} <br />
+            answer: {{ note.lock_value }}
             <button @click="endCam(index)">
-            취소
-          </button>
+              취소
+            </button>
           </div>
           <button class="cam-lock" @click="startCam(index)">
-              캠으로 열기
+            캠으로 열기
           </button>
-      
         </div>
       </tr>
 
@@ -498,7 +547,7 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
-import * as tmImage from '@teachablemachine/image';
+import * as tmImage from "@teachablemachine/image";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 let model;
@@ -531,11 +580,11 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          lock_answer:false,
-          lock_predicted:"",
-          lock_value:"",
+          lock_answer: false,
+          lock_predicted: "",
+          lock_value: "",
           predicted: "",
-          webcam:null,
+          webcam: null,
         },
         {
           category: "To-do List",
@@ -555,10 +604,10 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          lock_predicted:"",
-          lock_value:"",
+          lock_predicted: "",
+          lock_value: "",
           predicted: "",
-          webcam:null,
+          webcam: null,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -570,8 +619,8 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
-      model:null,
-        
+      model: null,
+      //lockModal: false,
     };
   },
 
@@ -600,7 +649,7 @@ export default {
       lock_predicted,
       lock_value,
       predicted,
-      webcam,
+      webcam
     ) {
       this.notes.push({
         category: category,
@@ -620,7 +669,7 @@ export default {
         img_path: img_path,
         contentModal: contentModal,
         lock: lock,
-        lock_answer:lock_answer,
+        lock_answer: lock_answer,
         lock_predicted: lock_predicted,
         lock_value: lock_value,
         predicted: predicted,
@@ -746,35 +795,40 @@ export default {
         //console.log(this.notes[this.imgIndex].img_path);
       };
     },
-    setlock(index){
+    setlock(index) {
       this.notes[index].lock = true;
     },
     async loop(index) {
-        this.notes[index].webcam.update(); // update the webcam frame
-        await this.lock_predict(index);
-        window.requestAnimationFrame(this.loop(index));       
-    },   
-    async lock_predict(index) {
-        // predict can take in an image, video or canvas html element
-        let prediction = await this.model.predictTopK(this.notes[index].webcam.canvas,1,true);        
-        this.notes[index].lock_predicted = prediction[0].className;
-        if(this.notes[index].lock_predicted == this.notes[index].lock_value){
-          this.notes[index].lock=false;
-          this.notes[index].lock_predicted = "";
-          this.notes[index].lock_answer=false;
-          this.notes[index].webcam= null;
-          
-        }
+      this.notes[index].webcam.update(); // update the webcam frame
+      await this.lock_predict(index);
+      window.requestAnimationFrame(this.loop(index));
     },
-    async startCam(index){
-        this.notes[index].webcam = new tmImage.Webcam(200,200,true);
-        await this.notes[index].webcam.setup(); // request access to the webcam
+    async lock_predict(index) {
+      // predict can take in an image, video or canvas html element
+      let prediction = await this.model.predictTopK(
+        this.notes[index].webcam.canvas,
+        1,
+        true
+      );
+      this.notes[index].lock_predicted = prediction[0].className;
+      if (this.notes[index].lock_predicted == this.notes[index].lock_value) {
+        this.notes[index].lock = false;
+        this.notes[index].lock_predicted = "";
+        this.notes[index].lock_answer = false;
+        this.notes[index].webcam = null;
+      }
+    },
+    async startCam(index) {
+      this.notes[index].webcam = new tmImage.Webcam(200, 200, true);
+      await this.notes[index].webcam.setup(); // request access to the webcam
 
-        await this.notes[index].webcam.play();
-        document.getElementById("cam").appendChild(this.notes[index].webcam.canvas);
-       //if(this.notes[index].lock){
-        window.requestAnimationFrame(this.loop(index));
-       //
+      await this.notes[index].webcam.play();
+      document
+        .getElementById("cam")
+        .appendChild(this.notes[index].webcam.canvas);
+      //if(this.notes[index].lock){
+      window.requestAnimationFrame(this.loop(index));
+      //
     },
 
     async predict(index) {
@@ -790,19 +844,22 @@ export default {
       console.log(tf.log);
     },
 
-    endCam(index){
-      this.notes[index].webcam=null;
+    endCam(index) {
+      this.notes[index].webcam = null;
       this.notes[index].lock_predicted = "";
-    }
+    },
   },
 
   async mounted() {
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
-      let baseURL = 'https://teachablemachine.withgoogle.com/models/OsUYBFECF/';
-      this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
+      let baseURL = "https://teachablemachine.withgoogle.com/models/OsUYBFECF/";
+      this.model = await tmImage.load(
+        baseURL + "model.json",
+        baseURL + "metadata.json"
+      );
       let maxPredictions = this.model.getTotalClasses();
-      console.log(maxPredictions);    
+      console.log(maxPredictions);
     }
     if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));

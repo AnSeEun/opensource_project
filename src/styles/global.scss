@@ -655,6 +655,35 @@ textarea {
   transition: 0.3s;
 }
 
+.locknoteModal {
+  position: absolute;
+  background-color: lawngreen;
+  width: 200px;
+  height: 120px;
+  top: 50%;
+  left: 16.5%;
+  z-index: 100;
+
+  h3 {
+    margin: 10px;
+    text-align: center;
+  }
+}
+
+.locknote {
+  div {
+    text-align: center;
+
+    input {
+      margin: 0px;
+    }
+
+    label {
+      margin-right: 10px;
+    }
+  }
+}
+
 .lock {
   position: absolute;
   right: 90px;
@@ -709,6 +738,31 @@ textarea {
     background-color: #eb9f9f;
   }
 }
+
+.lockBtn {
+  float: right;
+  margin-top: 10px;
+  margin-left: 20px;
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #f2f2f2;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #7a6a6e;
+  outline: none;
+  transition: 0.3s;
+
+  &:hover {
+    transition: 0.5s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
+
 .text-to-speech {
   position: absolute;
   right: 50px;
