@@ -104,6 +104,8 @@ export default {
       lock_value:"",
       predicted: "",
       webcam: null,
+      lock_modal: false,
+      img_comment: "",
     };
   },
   props: ["categorylist"],
@@ -133,6 +135,8 @@ export default {
         this.lock_value,
         this.predicted,
         this.webcam,
+        this.lock_modal,
+        this.img_comment,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -151,6 +155,8 @@ export default {
       this.lock_value="";
       this.predicted = "";
       this.webcam=null;
+      this.lock_modal = false;
+      this.img_comment = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);
