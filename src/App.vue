@@ -581,12 +581,7 @@ export default {
       city: '',
       temp:'',
       feels_like:'',
-      humidity:'',
-      wind_speed:'',
-      clouds:'',
-      rain:'',
-      snow:'',
-      weather:"음",
+      weather:'',
       lat:'',
       lon:'',
     };
@@ -824,12 +819,7 @@ export default {
         this.city = result.data.name
         this.temp = result.data.main.temp - 273.15
         this.feels_like = result.data.main.feels_like - 273.15
-        this.humidity = result.data.main.humidity
-        this.wind_speed = result.data.wind.speed
-        this.clouds = result.data.clouds.all
         this.weather = result.data.weather
-       // this.rain = result.data.rain.1h
-       // this.snow =result.data.snow.1h
         this.view=true
       })
     },
