@@ -49,7 +49,8 @@
         </span>
       </div>
       <div class="note-editor-bottom">
-        <button @click="createNew" class="fas fas-check-circle">
+        <div v-if="lock ===true && lock_value ===null"/>
+        <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
@@ -100,12 +101,12 @@ export default {
       contentModal: false,
       lock: false,
       lock_answer:false,
-      lock_predicted: "", 
-      lock_value:"",
+      webCamStart: false,
       predicted: "",
-      webcam: null,
       lock_modal: false,
       img_comment: "",
+      lock_value: null,
+      
     };
   },
   props: ["categorylist"],
@@ -131,10 +132,9 @@ export default {
         this.contentModal,
         this.lock,
         this.lock_answer,
-        this.lock_predicted,
         this.lock_value,
+        this.webCamStart,
         this.predicted,
-        this.webcam,
         this.lock_modal,
         this.img_comment,
       );
@@ -151,10 +151,8 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
-      this.lock_predicted="";
       this.lock_value="";
       this.predicted = "";
-      this.webcam=null;
       this.lock_modal = false;
       this.img_comment = "";
     },

@@ -243,9 +243,13 @@ textarea {
 
 .note-editor {
   font-family: "Noto Sans KR", sans-serif;
-  width: 300px;
-  height: 300px;
-  margin-left: 34px;
+  column-count: 4;
+  column-gap: 1em;
+  margin: 10px 0px 10px 0px;
+  height: auto;
+  width: 100%;
+  display: table;
+  margin-left: 50px;
   margin-right: 0px;
   // margin-top: 10px;
   margin-bottom: 30px;
@@ -435,18 +439,28 @@ textarea {
   width: 250px;
   height: auto;
 }
+.note-lock-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
 
 .note-lock {
   margin-top: 7px;
   padding-right: 7px;
   padding-left: 0px;
-  width: 253px;
-  height: 385px;
+  height: 336px;
+  width: 100%;
   background-color: transparent;
   border: none;
   resize: none;
   font-family: "Noto Sans KR", sans-serif;
   color: #654b52;
+  //background-color: #fc5e5e;
   font-size: 15px;
   letter-spacing: -0.7px;
 
@@ -532,6 +546,16 @@ textarea {
   display: inline-block;
 }
 
+.webcam-modal-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
 .category-modal-form {
   background-color: #654b52;
   display: inline-block;
@@ -572,12 +596,13 @@ textarea {
   // background: rgba(0, 0, 0, 0.5);
   // z-index: 2;
   position: absolute;
-  top: 15%;
+  top: 8.5%;
   margin-left: 5px;
   width: 240px;
   height: 300px;
   background-color: #7a6a6e;
   transition: 0.3s;
+  z-index: 3;
 }
 
 .webcam-modal-wrap {
@@ -595,7 +620,7 @@ textarea {
   top: 243px;
   left: 78px;
   width: 200px;
-  z-index: 100;
+  z-index: 2;
   color: #fff;
   //-webkit-transform: translate(-50%, -50%);
   //-ms-transform: translate(-50%, -50%);
@@ -690,7 +715,7 @@ textarea {
   padding: 20px 30px;
   background: #f4cccc;
   border: 1px solid #7a6a6e;
-  z-index: 3;
+  z-index: 4;
 }
 
 .category-modal-layer {
@@ -700,7 +725,7 @@ textarea {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 2;
+  z-index: 3;
 }
 
 .category-form {
@@ -826,8 +851,8 @@ textarea {
 
 .cam-lock {
   margin: 10px;
-  left: 25%;
-  top: 350px;
+  left: 27%;
+  top: 300px;
   cursor: pointer;
   position: relative;
   font-family: "Noto Sans KR", sans-serif;
@@ -851,6 +876,29 @@ textarea {
 .lockBtn {
   //float: right;
   margin-top: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  position: relative;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #f2f2f2;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  width: 100px;
+  height: 32px;
+  background-color: #7a6a6e;
+  outline: none;
+  transition: 0.3s;
+
+  &:hover {
+    transition: 0.5s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
+.lockBtn_TodoList {
+  //float: right;
+  margin-top: 30px;
   margin-left: 10px;
   cursor: pointer;
   position: relative;
