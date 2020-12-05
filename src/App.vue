@@ -3,16 +3,24 @@
     <div class="header">
       <img src="./assets/hellos_logo.png" />
       <p><a href="javascript:location.reload()">Note Knock</a></p>
-            <div v-if="view">
-              국가명: {{country}} 
-              도시명 : {{city}} 
-              현재 온도: {{temp.toFixed(2)}}º 
-              체감 온도: {{feels_like.toFixed(2)}}º 
-              날씨:{{weather[0].description}}
-           </div>
-      <p class="sub-title" style="font-size:70px; margin:0px">낰낰</p>
+      <div class="weatherNote" v-if="view">
+        <div class="weather">
+          <span>국가{{ country }}</span>
+          <span>도시{{ city }}</span>
+        </div>
+        <div>
+          <span>현재온도{{ temp.toFixed(2) }}º</span>
+          <span>체감온도{{ feels_like.toFixed(2) }}º</span>
+          <span>{{ weather[0].description }}</span>
+        </div>
+        <!--국가명: {{ country }} 도시명 : {{ city }} 현재 온도:
+        {{ temp.toFixed(2) }}º 체감 온도: {{ feels_like.toFixed(2) }}º 날씨:{{
+          weather[0].description
+        }}-->
+      </div>
+      <p class="sub-title" style="font-size:70px; margin:0px;">낰낰</p>
     </div>
-    <div>   
+    <div>
       <select class="category-filter" v-model="selected">
         <option value="">전체</option>
         <option v-for="list in categorys" :key="list">
@@ -67,7 +75,7 @@
           class="note"
           :style="{ 'background-color': note.theme }"
         >
-          <div v-if="note.lock!=true">
+          <div v-if="note.lock != true">
             <span class="favorites">
               <!-- <i
                 class="far fa-star"
@@ -108,8 +116,20 @@
               placeholder="Title"
             />
             <p />
-            <div v-if="note.img_path != null" class="note-image-wrap">
-              <img class="note-image" :src="note.img_path" />
+            <div class="note-cam-wrap">
+              <!--카메라위치-->
+            </div>
+            <div v-show="note.img_path" class="note-image-wrap">
+              <img
+                class="note-image"
+                :src="note.img_path"
+                v-on:click="predict(index)"
+                v-on:mouseover="imageCommentModalIn(index)"
+                v-on:mouseout="imageCommentModalOut(index)"
+              />
+              <div v-show="note.img_comment_modal" class="imageCommentModal">
+                {{ note.predicted }}
+              </div>
             </div>
 
             <div v-if="note.category === 'To-do List'" id="checkbox">
@@ -243,10 +263,84 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
-        
+
+              <button class="lockBtn" @click="modalLock(index)">
+                노트 잠금
+              </button>
+              <transition name="bounce">
+                <div class="locknoteModal" v-show="note.lock_modal == true">
+                  <span
+                    class="locknoteModalCancle"
+                    @click="note.lock_modal = false"
+                  >
+                    <i class="fas fa-times"></i>
+                  </span>
+                  <span class="locknote">
+                    <h3>LOCK NOTE</h3>
+                    <div>
+                      <input
+                        type="radio"
+                        id="lock"
+                        v-bind:value="true"
+                        v-model="note.lock_answer"
+                      />
+                      <label for="lock">Yes</label>
+                      <input
+                        type="radio"
+                        id="unlock"
+                        v-bind:value="false"
+                        v-model="note.lock_answer"
+                      />
+                      <label for="unlock">No</label>
+                    </div>
+                    <div v-if="note.lock_answer">
+                      lock Key
+                      <select v-model="note.lock_value">
+                        <option>휴대폰</option>
+                        <option>머그컵</option>
+                        <option>마우스</option>
+                        <option>키보드</option>
+                      </select>
+                      <div style="height: 45px;" v-if="note.lock_value != ''">
+                        <button class="lockModalBtn" @click="setlock(index)">
+                          확인
+                        </button>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </transition>
+
+              <!--
+              <span class="note-camera">
+                <i class="fas fa-camera" @click="setCaptureCam(index)"></i>
+              </span>-->
             </div>
           </div>
-          
+
+          <div v-else class="note-lock">
+            <div class="lock">
+              <i class="fas fa-lock fa-9x"> </i>
+            </div>
+            <button class="cam-lock" @click="startCam(index)">
+              캠으로 열기
+            </button>
+            <transition name="bounce">
+              <div class="webcam-modal-layer" v-if="note.webcam">
+                <span class="webcamModalCancle" @click="endCam(index)">
+                  <i class="fas fa-times"></i>
+                </span>
+                <div id="cam" class="webcam-modal-wrap"></div>
+                <span class="webcam-modal-content">
+                  Object: {{ note.lock_predicted }}<br />
+                  Key: {{ note.lock_value }}
+                </span>
+              </div>
+              <!-- <button @click="endCam(index)">
+            취소
+          </button> -->
+            </transition>
+          </div>
         </tr>
       </div>
 
@@ -260,7 +354,7 @@
         class="note"
         :style="{ 'background-color': note.theme }"
       >
-        <div v-if="note.lock!=true">
+        <div v-if="note.lock != true">
           <span class="favorites">
             <i class="far fa-star" @click="addFavorite(index)"></i>
           </span>
@@ -296,11 +390,20 @@
             placeholder="Title"
           />
           <p />
-          <div v-if="note.img_path != null" class="note-image-wrap">
-            <img @click="predict(index)" class="note-image" :src="note.img_path" />
-            <!--<img id="image-test" src="./assets/dog.jpg" />-->
-            <!--<button @click="predict(index)">Let's predict!</button>-->
-            <h1>Class: {{ note.predicted }}</h1>
+          <div class="note-cam-wrap">
+            <!--카메라위치-->
+          </div>
+          <div v-show="note.img_path" class="note-image-wrap">
+            <img
+              class="note-image"
+              :src="note.img_path"
+              v-on:click="predict(index)"
+              v-on:mouseover="imageCommentModalIn(index)"
+              v-on:mouseout="imageCommentModalOut(index)"
+            />
+            <div v-show="note.img_comment_modal" class="imageCommentModal">
+              {{ note.predicted }}
+            </div>
           </div>
           <div v-if="note.category === 'To-do List'" id="checkbox">
             <div v-for="index in note.listCount" :key="index">
@@ -432,45 +535,85 @@
                 v-on:change="setImageFile($event)"
               />
             </form>
+
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-            <div>
-              노트 잠금 
-              <input type="radio" id="lock" v-bind:value=true v-model="note.lock_answer">
-              <label for="lock">Yes</label>
-              <input type="radio" id="unlock" v-bind:value=false v-model="note.lock_answer">
-              <label for="unlock">No</label>
-            </div>
-              <span v-if="note.lock_answer">
-                <select v-model="note.lock_value">
-                <option>휴대폰</option>
-                <option>머그컵</option>
-                <option>마우스</option>
-                <option>키보드</option>
-                </select>
-                <span v-if="note.lock_value!=''">
-                  <button @click="setlock(index)">잠금</button>
+
+            <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            <transition name="bounce">
+              <div class="locknoteModal" v-show="note.lock_modal == true">
+                <span
+                  class="locknoteModalCancle"
+                  @click="note.lock_modal = false"
+                >
+                  <i class="fas fa-times"></i>
                 </span>
-              </span>
+                <span class="locknote">
+                  <h3>LOCK NOTE</h3>
+                  <div>
+                    <input
+                      type="radio"
+                      id="lock"
+                      v-bind:value="true"
+                      v-model="note.lock_answer"
+                    />
+                    <label for="lock">Yes</label>
+                    <input
+                      type="radio"
+                      id="unlock"
+                      v-bind:value="false"
+                      v-model="note.lock_answer"
+                    />
+                    <label for="unlock">No</label>
+                  </div>
+                  <div v-if="note.lock_answer">
+                    lock Key
+                    <select v-model="note.lock_value">
+                      <option>휴대폰</option>
+                      <option>머그컵</option>
+                      <option>마우스</option>
+                      <option>키보드</option>
+                    </select>
+                    <div style="height: 45px;" v-if="note.lock_value != ''">
+                      <button class="lockModalBtn" @click="setlock(index)">
+                        확인
+                      </button>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </transition>
+
+            <!--
+            <span class="note-camera">
+              <i class="fas fa-camera" @click="setCaptureCam(index)"></i>
+            </span>-->
           </div>
         </div>
+
         <div v-else class="note-lock">
           <div class="lock">
-            <i class="fas fa-lock fa-9x">
-          </i>
-          </div>
-
-         <div class="webcam-modal-content" v-if=note.webcam id="cam"/>
-          <div v-if=note.webcam>
-            <button @click="endCam(index)">
-            취소
-          </button>
+            <i class="fas fa-lock fa-9x"> </i>
           </div>
           <button class="cam-lock" @click="startCam(index)">
-              캠으로 열기
+            캠으로 열기
           </button>
-      
+          <transition name="bounce">
+            <div class="webcam-modal-layer" v-if="note.webcam">
+              <span class="webcamModalCancle" @click="endCam(index)">
+                <i class="fas fa-times"></i>
+              </span>
+              <div id="cam" class="webcam-modal-wrap"></div>
+              <span class="webcam-modal-content">
+                Object: {{ note.lock_predicted }}<br />
+                Key: {{ note.lock_value }}
+              </span>
+            </div>
+            <!-- <button @click="endCam(index)">
+            취소
+          </button> -->
+          </transition>
         </div>
       </tr>
 
@@ -498,11 +641,12 @@
 import NoteEditor from "./components/NoteEditor.vue";
 import NoteSearch from "./components/Search.vue";
 import categoryadd from "./components/CategoryAdd.vue";
-import * as tmImage from '@teachablemachine/image';
+//import WebCam from "./components/WebCam.vue";
+import * as tmImage from "@teachablemachine/image";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
-var Vue = require('vue/dist/vue')
-import VueResource from 'vue-resource';
+var Vue = require("vue/dist/vue");
+import VueResource from "vue-resource";
 Vue.use(VueResource);
 
 let model;
@@ -536,11 +680,13 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          lock_answer:false,
-          lock_predicted:"",
-          lock_value:"",
+          lock_answer: false,
+          lock_predicted: "",
+          lock_value: "",
           predicted: "",
-          webcam:null,
+          webcam: null,
+          lock_modal: false,
+          img_comment: "인식하지 못하였습니다.",
         },
         {
           category: "To-do List",
@@ -560,10 +706,12 @@ export default {
           img_path: "",
           contentModal: false,
           lock: false,
-          lock_predicted:"",
-          lock_value:"",
+          lock_predicted: "",
+          lock_value: "",
           predicted: "",
-          webcam:null,
+          webcam: null,
+          lock_modal: false,
+          img_comment: "인식하지 못하였습니다.",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -575,22 +723,22 @@ export default {
       imgIndex: -1,
       fileReader: null,
       test: null,
-      model:null,
+      model: null,
       view: false,
-      country: '',
-      city: '',
-      temp:'',
-      feels_like:'',
-      weather:'',
-      lat:'',
-      lon:'',
+      country: "",
+      city: "",
+      temp: "",
+      feels_like: "",
+      weather: "",
+      lat: "",
+      lon: "",
     };
   },
 
   computed: {
-    hasResult: function(){
-      return this.posts.length > 0
-    }
+    hasResult: function() {
+      return this.posts.length > 0;
+    },
   },
 
   methods: {
@@ -617,6 +765,8 @@ export default {
       lock_value,
       predicted,
       webcam,
+      lock_modal,
+      img_comment
     ) {
       this.notes.push({
         category: category,
@@ -636,11 +786,13 @@ export default {
         img_path: img_path,
         contentModal: contentModal,
         lock: lock,
-        lock_answer:lock_answer,
+        lock_answer: lock_answer,
         lock_predicted: lock_predicted,
         lock_value: lock_value,
         predicted: predicted,
         webcam: webcam,
+        lock_modal: lock_modal,
+        img_comment: img_comment,
       });
       this.editorOpen = false;
     },
@@ -689,11 +841,9 @@ export default {
     },
     addFavorite: function(index) {
       this.notes[index].favorite = true;
-      // console.log(index, this.notes[index].favorite_cnt);
     },
     deleteFavorite: function(index) {
       this.notes[index].favorite = false;
-      // console.log(index, this.notes[index].favorite);
     },
     setBold: function(index) {
       this.notes[index].is_bold = !this.notes[index].is_bold;
@@ -750,47 +900,48 @@ export default {
     },
     setImageFile: function(event) {
       this.imgFile = event.target.files;
-      //console.log(this.imgFile);
 
       this.fileReader = new FileReader();
-      //console.log(this.fileReader);
       this.fileReader.readAsDataURL(this.imgFile[0]);
       this.fileReader.onload = event => {
-        // console.log(event.target.result);
         this.imgUrl = event.target.result;
         this.notes[this.imgIndex].img_path = this.imgUrl;
-        //console.log(this.notes[this.imgIndex].img_path);
       };
     },
-    setlock(index){
+    setlock(index) {
       this.notes[index].lock = true;
     },
     async loop(index) {
-        this.notes[index].webcam.update(); // update the webcam frame
-        await this.lock_predict(index);
-        window.requestAnimationFrame(this.loop(index));       
-    },   
-    async lock_predict(index) {
-        // predict can take in an image, video or canvas html element
-        let prediction = await this.model.predictTopK(this.notes[index].webcam.canvas,1,true);        
-        this.notes[index].lock_predicted = prediction[0].className;
-        if(this.notes[index].lock_predicted == this.notes[index].lock_value){
-          this.notes[index].lock=false;
-          this.notes[index].lock_predicted = "";
-          this.notes[index].lock_answer=false;
-          this.notes[index].webcam= null;
-          
-        }
+      this.notes[index].webcam.update(); // update the webcam frame
+      await this.lock_predict(index);
+      window.requestAnimationFrame(this.loop(index));
     },
-    async startCam(index){
-        this.notes[index].webcam = new tmImage.Webcam(200,200,true);
-        await this.notes[index].webcam.setup(); // request access to the webcam
+    async lock_predict(index) {
+      // predict can take in an image, video or canvas html element
+      let prediction = await this.model.predictTopK(
+        this.notes[index].webcam.canvas,
+        1,
+        true
+      );
+      this.notes[index].lock_predicted = prediction[0].className;
+      if (this.notes[index].lock_predicted == this.notes[index].lock_value) {
+        this.notes[index].lock = false;
+        this.notes[index].lock_predicted = "";
+        this.notes[index].lock_answer = false;
+        this.notes[index].webcam = null;
+      }
+    },
+    async startCam(index) {
+      this.notes[index].webcam = new tmImage.Webcam(200, 200, true);
+      await this.notes[index].webcam.setup(); // request access to the webcam
 
-        await this.notes[index].webcam.play();
-        document.getElementById("cam").appendChild(this.notes[index].webcam.canvas);
-       //if(this.notes[index].lock){
-        window.requestAnimationFrame(this.loop(index));
-       //
+      await this.notes[index].webcam.play();
+      document
+        .getElementById("cam")
+        .appendChild(this.notes[index].webcam.canvas);
+      //if(this.notes[index].lock){
+      window.requestAnimationFrame(this.loop(index));
+      //
     },
 
     async predict(index) {
@@ -799,78 +950,95 @@ export default {
       const img = noteImage;
       let tmp = await model.detect(img);
       this.notes[index].predicted = tmp[0].class;
+      this.notes[index].img_comment_modal = this.notes[index].predicted;
       //const img = document.getElementById("detectedImage");
       //console.log(this.notes[index].predicted);
       //console.log(index);
       //console.log("index", index, img);
-      console.log(tf.log);
+      console.log(tf.version.cocoSSD);
     },
 
-    endCam(index){
-      this.notes[index].webcam=null;
+    endCam(index) {
+      this.notes[index].webcam = null;
       this.notes[index].lock_predicted = "";
     },
 
-    searchWeather(){
-      const BASE_URL = 'http://api.openweathermap.org/data/2.5/weather?lat='+this.lat+'&lon='+this.lon+'&lang=kr&appid=95e8423951820d94ae0f14e1d78c5f86';
-      Vue.http.get(`${BASE_URL}`)
-      .then((result)=>{
-        this.country = result.data.sys.country
-        this.city = result.data.name
-        this.temp = result.data.main.temp - 273.15
-        this.feels_like = result.data.main.feels_like - 273.15
-        this.weather = result.data.weather
-        this.view=true
+    searchWeather() {
+      const BASE_URL =
+        "http://api.openweathermap.org/data/2.5/weather?lat=" +
+        this.lat +
+        "&lon=" +
+        this.lon +
+        "&lang=kr&appid=95e8423951820d94ae0f14e1d78c5f86";
+      Vue.http.get(`${BASE_URL}`).then(result => {
+        this.country = result.data.sys.country;
+        this.city = result.data.name;
+        this.temp = result.data.main.temp - 273.15;
+        this.feels_like = result.data.main.feels_like - 273.15;
+        this.weather = result.data.weather;
+        this.view = true;
         var header = document.getElementsByClassName("header");
-        
-        if(this.weather[0].description==='비'){
-          for(var i=0; i<header.length; i++){
-            header[i].style["background-color"]='#F7BE81'
+        if (this.weather[0].description === "맑음") {
+          for (var i = 0; i < header.length; i++) {
+            header[i].style["background-color"] = "#F7BE81";
+          }
+        } else if (this.weather[0].description === "흐림") {
+          for (var j = 0; j < header.length; j++) {
+            header[i].style["background-color"] = "#BDBDBD";
+            //header[j].style["background-image"] = "url('./assets/logo.png')";
           }
         }
-        else if(this.weather[0].description==='흐림'){
-          for(var j=0; j<header.length; j++){
-            header[j].style["background-color"]='gray'
-          }
-        }
-        
-      })
-
-      
+      });
     },
 
-    getMap(){
+    getMap() {
       if (navigator.geolocation) {
         var self = this;
-          navigator.geolocation.getCurrentPosition(function(position) {       
-              self.lat = position.coords.latitude, // 위도
-              self.lon = position.coords.longitude; // 경도
-          });
+        navigator.geolocation.getCurrentPosition(function(position) {
+          (self.lat = position.coords.latitude), // 위도
+            (self.lon = position.coords.longitude); // 경도
+        });
       }
     },
 
+    modalLock(index) {
+      this.notes[index].lock_modal = !this.notes[index].lock_modal;
+    },
 
+    setCaptureCam(index) {
+      console.log(index);
+    },
+
+    imageCommentModalIn(index) {
+      this.predict(index);
+      this.notes[index].img_comment_modal = true;
+    },
+
+    imageCommentModalOut(index) {
+      this.notes[index].img_comment_modal = false;
+    },
   },
 
   async mounted() {
     this.getMap();
     if (localStorage.getItem("notes")) {
       this.notes = JSON.parse(localStorage.getItem("notes"));
-      let baseURL = 'https://teachablemachine.withgoogle.com/models/OsUYBFECF/';
-      this.model = await tmImage.load(baseURL+'model.json', baseURL+'metadata.json');
+      let baseURL = "https://teachablemachine.withgoogle.com/models/OsUYBFECF/";
+      this.model = await tmImage.load(
+        baseURL + "model.json",
+        baseURL + "metadata.json"
+      );
       let maxPredictions = this.model.getTotalClasses();
-      console.log(maxPredictions);    
+      console.log(maxPredictions);
     }
     if (localStorage.getItem("categorys")) {
       this.categorys = JSON.parse(localStorage.getItem("categorys"));
     }
-   
+
     model = await cocoSSD.load();
 
     console.log("model loaded");
-  
-     this.searchWeather();
-
+    this.searchWeather();
   },
 
   watch: {
@@ -893,6 +1061,7 @@ export default {
     appNoteEditor: NoteEditor,
     SearchNote: NoteSearch,
     categoryadd: categoryadd,
+    //Webcam: WebCam,
   },
 };
 </script>
