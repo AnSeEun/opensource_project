@@ -100,10 +100,9 @@ export default {
       contentModal: false,
       lock: false,
       lock_answer:false,
-      lock_predicted: "", 
       lock_value:"",
+      webCamStart: false,
       predicted: "",
-      webcam: null,
       lock_modal: false,
       img_comment: "",
     };
@@ -131,10 +130,9 @@ export default {
         this.contentModal,
         this.lock,
         this.lock_answer,
-        this.lock_predicted,
         this.lock_value,
+        this.webCamStart,
         this.predicted,
-        this.webcam,
         this.lock_modal,
         this.img_comment,
       );
@@ -151,10 +149,8 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
-      this.lock_predicted="";
       this.lock_value="";
       this.predicted = "";
-      this.webcam=null;
       this.lock_modal = false;
       this.img_comment = "";
     },
