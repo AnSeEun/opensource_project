@@ -49,7 +49,8 @@
         </span>
       </div>
       <div class="note-editor-bottom">
-        <button @click="createNew" class="fas fas-check-circle">
+        <div v-if="lock ===true && lock_value ===null"/>
+        <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
@@ -100,11 +101,12 @@ export default {
       contentModal: false,
       lock: false,
       lock_answer:false,
-      lock_value:"",
       webCamStart: false,
       predicted: "",
       lock_modal: false,
       img_comment: "",
+      lock_value: null,
+      
     };
   },
   props: ["categorylist"],

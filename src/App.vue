@@ -56,7 +56,7 @@
               @categoryCancle="modalCategory"
             ></categoryadd>
           </div>
-          <div class="category-modal-layer"></div>
+          <div class="category-modal-layer" ></div>
         </div>
       </div>
     </div>
@@ -161,7 +161,7 @@
               </div>
               <i
                 class="fas fa-plus"
-                v-if="note.listCount < 5"
+                v-if="note.listCount < 6"
                 @click.prevent="note.listCount++"
               >
               </i>
@@ -359,7 +359,7 @@
             </div>
             <i
               class="fas fa-plus"
-              v-if="note.listCount < 5"
+              v-if="note.listCount < 6"
               @click.prevent="note.listCount++"
             >
             </i>
@@ -465,8 +465,13 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-
-            <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            <span v-if="note.category!='To-do List'">
+              <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            </span>
+            <span v-else>
+              <button class="lockBtn_TodoList" @click="modalLock(index)">노트 잠금</button>
+            </span>
+            
             <transition name="bounce">
               <div class="locknoteModal" v-show="note.lock_modal == true">
                 <span
@@ -513,7 +518,9 @@
           </div>
         </div>
 
+        
         <div v-else class="note-lock">
+          <div class="note-lock-layer" v-show="note.webCamStart"></div>
           <div class="lock">
             <i class="fas fa-lock fa-9x"> </i>
           </div>
@@ -535,8 +542,9 @@
             <!-- <button @click="endCam(index)">
             취소
           </button> -->
-          </transition>
+          </transition>     
         </div>
+        
       </tr>
 
       <app-note-editor
@@ -866,10 +874,10 @@ export default {
       this.startCam();
     },
     endCam(index) {
+      this.notes[index].webCamStart = false;
       this.webcam.stop()
       this.webcam = null;
       this.lock_predicted = "";
-      this.notes[index].webCamStart = false;
     },
     async predict(index) {
       let noteImage = new Image();
@@ -905,7 +913,7 @@ export default {
           }
         } else if (this.weather[0].description === "구름조금") {
           for (var j = 0; j < header.length; j++) {
-            header[i].style["background-color"] = "#E6E6E6";
+            header[j].style["background-color"] = "#E6E6E6";
             //header[j].style["background-image"] = "url('./assets/logo.png')";
           }
         }
