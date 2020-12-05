@@ -56,7 +56,7 @@
               @categoryCancle="modalCategory"
             ></categoryadd>
           </div>
-          <div class="category-modal-layer"></div>
+          <div class="category-modal-layer" ></div>
         </div>
       </div>
     </div>
@@ -518,7 +518,9 @@
           </div>
         </div>
 
+        
         <div v-else class="note-lock">
+          <div class="note-lock-layer" v-show="note.webCamStart"></div>
           <div class="lock">
             <i class="fas fa-lock fa-9x"> </i>
           </div>
@@ -542,6 +544,7 @@
           </button> -->
           </transition>     
         </div>
+        
       </tr>
 
       <app-note-editor
@@ -871,10 +874,10 @@ export default {
       this.startCam();
     },
     endCam(index) {
+      this.notes[index].webCamStart = false;
       this.webcam.stop()
       this.webcam = null;
       this.lock_predicted = "";
-      this.notes[index].webCamStart = false;
     },
     async predict(index) {
       let noteImage = new Image();
