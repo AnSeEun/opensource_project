@@ -161,7 +161,7 @@
               </div>
               <i
                 class="fas fa-plus"
-                v-if="note.listCount < 5"
+                v-if="note.listCount < 6"
                 @click.prevent="note.listCount++"
               >
               </i>
@@ -359,7 +359,7 @@
             </div>
             <i
               class="fas fa-plus"
-              v-if="note.listCount < 5"
+              v-if="note.listCount < 6"
               @click.prevent="note.listCount++"
             >
             </i>
@@ -465,8 +465,13 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-
-            <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            <span v-if="note.category!='To-do List'">
+              <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            </span>
+            <span v-else>
+              <button class="lockBtn_TodoList" @click="modalLock(index)">노트 잠금</button>
+            </span>
+            
             <transition name="bounce">
               <div class="locknoteModal" v-show="note.lock_modal == true">
                 <span
@@ -535,7 +540,7 @@
             <!-- <button @click="endCam(index)">
             취소
           </button> -->
-          </transition>
+          </transition>     
         </div>
       </tr>
 
@@ -905,7 +910,7 @@ export default {
           }
         } else if (this.weather[0].description === "구름조금") {
           for (var j = 0; j < header.length; j++) {
-            header[i].style["background-color"] = "#E6E6E6";
+            header[j].style["background-color"] = "#E6E6E6";
             //header[j].style["background-image"] = "url('./assets/logo.png')";
           }
         }
