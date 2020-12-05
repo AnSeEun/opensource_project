@@ -12,7 +12,7 @@
           <span>현재온도{{ temp.toFixed(2) }}º</span>
           <span>체감온도{{ feels_like.toFixed(2) }}º</span>
           <span>{{ weather[0].description }}</span>
-          <img :src="imgURL"/>
+          <img :src="imgURL" />
         </div>
         <!--국가명: {{ country }} 도시명 : {{ city }} 현재 온도:
         {{ temp.toFixed(2) }}º 체감 온도: {{ feels_like.toFixed(2) }}º 날씨:{{
@@ -56,7 +56,8 @@
               @categoryCancle="modalCategory"
             ></categoryadd>
           </div>
-          <div class="category-modal-layer" ></div>
+
+          <div class="category-modal-layer"></div>
         </div>
       </div>
     </div>
@@ -264,7 +265,6 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
-
             </div>
           </div>
         </tr>
@@ -465,13 +465,17 @@
             <button class="imageInputBtn" v-on:click="setFileExploer(index)">
               이미지 업로드
             </button>
-            <span v-if="note.category!='To-do List'">
-              <button class="lockBtn" @click="modalLock(index)">노트 잠금</button>
+            <span v-if="note.category != 'To-do List'">
+              <button class="lockBtn" @click="modalLock(index)">
+                노트 잠금
+              </button>
             </span>
             <span v-else>
-              <button class="lockBtn_TodoList" @click="modalLock(index)">노트 잠금</button>
+              <button class="lockBtn_TodoList" @click="modalLock(index)">
+                노트 잠금
+              </button>
             </span>
-            
+
             <transition name="bounce">
               <div class="locknoteModal" v-show="note.lock_modal == true">
                 <span
@@ -518,17 +522,15 @@
           </div>
         </div>
 
-        
         <div v-else class="note-lock">
-          <div class="note-lock-layer" v-show="note.webCamStart"></div>
           <div class="lock">
             <i class="fas fa-lock fa-9x"> </i>
           </div>
           <button class="cam-lock" @click="startnoteCam(index)">
             캠으로 열기
           </button>
-          <transition name="bounce" v-if="note.webCamStart">
-            <div class="webcam-modal-layer" >
+          <transition name="bounce">
+            <div v-if="note.webCamStart" class="webcam-modal-layer">
               <span class="webcamModalCancle" @click="endCam(index)">
                 <i class="fas fa-times"></i>
               </span>
@@ -537,14 +539,17 @@
                 Object: {{ lock_predicted }}<br />
                 Key: {{ note.lock_value }}
               </span>
-              <span v-if="lock_predicted === note.lock_value" v-bind="setunlock(index)"></span>
+              <span
+                v-if="lock_predicted === note.lock_value"
+                v-bind="setunlock(index)"
+              ></span>
             </div>
             <!-- <button @click="endCam(index)">
             취소
           </button> -->
-          </transition>     
+          </transition>
         </div>
-        
+        <div class="note-lock-layer" v-show="note.webCamStart"></div>
       </tr>
 
       <app-note-editor
@@ -840,9 +845,9 @@ export default {
     setlock(index) {
       this.notes[index].lock = true;
     },
-    setunlock(index){
+    setunlock(index) {
       this.notes[index].lock = false;
-      this.webcam.stop()
+      this.webcam.stop();
       this.webcam = null;
       this.lock_predicted = "";
       this.notes[index].webCamStart = false;
@@ -850,7 +855,7 @@ export default {
       this.notes[index].lock_modal = false;
     },
     async loop() {
-      if(this.webcam != null){
+      if (this.webcam != null) {
         this.webcam.update(); // update the webcam frame
         await this.lock_predict();
         window.requestAnimationFrame(this.loop);
@@ -858,7 +863,11 @@ export default {
     },
     async lock_predict() {
       // predict can take in an image, video or canvas html element
-      let prediction = await this.model.predictTopK(this.webcam.canvas,1,true);
+      let prediction = await this.model.predictTopK(
+        this.webcam.canvas,
+        1,
+        true
+      );
       this.lock_predicted = prediction[0].className;
     },
     async startCam() {
@@ -867,15 +876,15 @@ export default {
 
       await this.webcam.play();
       document.getElementById("cam").appendChild(this.webcam.canvas);
-      window.requestAnimationFrame(this.loop); 
+      window.requestAnimationFrame(this.loop);
     },
-    startnoteCam(index){
+    startnoteCam(index) {
       this.notes[index].webCamStart = true;
       this.startCam();
     },
     endCam(index) {
       this.notes[index].webCamStart = false;
-      this.webcam.stop()
+      this.webcam.stop();
       this.webcam = null;
       this.lock_predicted = "";
     },
@@ -893,17 +902,21 @@ export default {
       console.log(tf.version.cocoSSD);
     },
 
-    
-
     searchWeather() {
-      const BASE_URL ="http://api.openweathermap.org/data/2.5/weather?lat=" + this.lat +"&lon=" + this.lon + "&lang=kr&appid=95e8423951820d94ae0f14e1d78c5f86";
+      const BASE_URL =
+        "http://api.openweathermap.org/data/2.5/weather?lat=" +
+        this.lat +
+        "&lon=" +
+        this.lon +
+        "&lang=kr&appid=95e8423951820d94ae0f14e1d78c5f86";
       Vue.http.get(`${BASE_URL}`).then(result => {
         this.country = result.data.sys.country;
         this.city = result.data.name;
         this.temp = result.data.main.temp - 273.15;
         this.feels_like = result.data.main.feels_like - 273.15;
         this.weather = result.data.weather;
-        this.imgURL = "http://openweathermap.org/img/w/" + this.weather[0].icon + ".png"; 
+        this.imgURL =
+          "http://openweathermap.org/img/w/" + this.weather[0].icon + ".png";
 
         this.view = true;
         var header = document.getElementsByClassName("header");
