@@ -124,7 +124,6 @@
               <img
                 class="note-image"
                 :src="note.img_path"
-                v-on:click="predict(index)"
                 v-on:mouseover="imageCommentModalIn(index)"
                 v-on:mouseout="imageCommentModalOut(index)"
               />
@@ -323,7 +322,6 @@
             <img
               class="note-image"
               :src="note.img_path"
-              v-on:click="predict(index)"
               v-on:mouseover="imageCommentModalIn(index)"
               v-on:mouseout="imageCommentModalOut(index)"
             />
@@ -515,13 +513,10 @@
                 </span>
               </div>
             </transition>
-<<<<<<< HEAD
 
             <span class="note-camera">
               <i class="fas fa-camera" @click="setCaptureCam(index)"></i>
             </span>
-=======
->>>>>>> 8f53540b276544ed557ee90a80358f18c62f2f28
           </div>
         </div>
 
