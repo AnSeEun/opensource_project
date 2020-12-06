@@ -48,7 +48,7 @@
           <i class="fas fa-microphone"></i>
         </span>
       </div>
-      
+
       <div class="lockEditor">
         노트 잠금
         <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
@@ -65,32 +65,13 @@
           </select>
         </span>
       </div>
-      
+
       <div class="note-editor-bottom">
         <div v-if="lock === true && lock_value === null" />
         <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
-<<<<<<< HEAD
-      <div>
-        노트 잠금
-        <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
-        <label for="lock">Yes</label>
-        <input type="radio" id="unlock" v-bind:value="false" v-model="lock" />
-        <label for="unlock">No</label>
-      </div>
-      <div v-if="lock">
-        <select v-model="lock_value">
-          <option>휴대폰</option>
-          <option>머그컵</option>
-          <option>마우스</option>
-          <option>키보드</option>
-        </select>
-      </div>
-=======
-      
->>>>>>> 8410307330f0ee7c14264f2cece21bb6bad2f6b3
     </tr>
   </div>
 </template>
@@ -126,6 +107,8 @@ export default {
       lock_modal: false,
       img_comment: "",
       lock_value: null,
+      img_path2: "",
+      filename: "",
     };
   },
   props: ["categorylist"],
@@ -155,7 +138,9 @@ export default {
         this.webCamStart,
         this.predicted,
         this.lock_modal,
-        this.img_comment
+        this.img_comment,
+        this.img_path2,
+        this.filename,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -174,6 +159,8 @@ export default {
       this.predicted = "";
       this.lock_modal = false;
       this.img_comment = "";
+      this.img_path2 = "";
+      this.filename= "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

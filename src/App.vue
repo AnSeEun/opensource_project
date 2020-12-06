@@ -584,10 +584,14 @@ import categoryadd from "./components/CategoryAdd.vue";
 import * as tmImage from "@teachablemachine/image";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
+//import * as ps from "python-shell";
+import axios from "axios";
 var Vue = require("vue/dist/vue");
 import VueResource from "vue-resource";
 Vue.use(VueResource);
-import PythonShell from "python-shell";
+// import fs from "file-system";
+// import os from "os";
+// import path from "path";
 
 let model;
 
@@ -626,6 +630,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
+          img_path2: "",
+          filename: "",
         },
         {
           category: "To-do List",
@@ -651,6 +657,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
+          img_path2: "",
+          filename: "",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -674,6 +682,8 @@ export default {
       lat: "",
       lon: "",
       imgURL: null,
+      img_path2: "",
+      filename: "",
     };
   },
 
@@ -707,7 +717,9 @@ export default {
       webCamStart,
       predicted,
       lock_modal,
-      img_comment
+      img_comment,
+      img_path2,
+      filename
     ) {
       this.notes.push({
         category: category,
@@ -733,6 +745,8 @@ export default {
         predicted: predicted,
         lock_modal: lock_modal,
         img_comment: img_comment,
+        img_path2: img_path2,
+        filename: filename,
       });
       this.editorOpen = false;
     },
@@ -846,6 +860,7 @@ export default {
       this.fileReader.onload = event => {
         this.imgUrl = event.target.result;
         this.notes[this.imgIndex].img_path = this.imgUrl;
+        this.notes[this.imgIndex].filename = this.imgFile[0].name;
       };
     },
     setlock(index) {
@@ -963,19 +978,31 @@ export default {
       this.notes[index].img_comment_modal = false;
     },
 
-    setCapture: function(index) {
-      //console.log(PythonShell);
-      let ps = new PythonShell("my_script.py");
+    setCapture: async function(index) {
+      //let tmp;
+      let result;
+      let emotion;
+      //let file = this.notes[index].img_path;
+      let filename = this.notes[index].filename;
+      //filename = img
+      // console.log(filename);
+      //let file = "123123";
+      // let file = "fileurl123";/
+      //console.log("file: ", file);
       console.log(index);
-      console.log(ps);
-      //PythonShell.run('my_script.py');
-      // ps.run("my_script.py", null, function(err) {
-      //   if (err) throw err;
-      //   console.log("finished");
-      // });
-
-      console.log(PythonShell);
-      //console.log(PythonShell.handler());
+      await axios
+        .post("http://127.0.0.1:3000/face", {
+          //fileUrl: file,
+          fileUrl: "D:/GitKumoh/Documents/osp20-hello/src/assets/" + filename,
+          //fileUrl: file,
+        })
+        .then(res => {
+          //console.log(res.data);
+          result = res.data["faces"][0];
+          emotion = result["emotion"]["value"];
+        });
+      console.log(result);
+      console.log(emotion);
     },
   },
 
