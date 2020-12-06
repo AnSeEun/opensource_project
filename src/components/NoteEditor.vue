@@ -108,7 +108,7 @@ export default {
       img_comment: "",
       lock_value: null,
       filename: "",
-      emotion: "",
+      emotion: "NockNote",
     };
   },
   props: ["categorylist"],
@@ -160,7 +160,7 @@ export default {
       this.lock_modal = false;
       this.img_comment = "";
       this.filename = "";
-      this.emotion = "";
+      this.emotion = "NockNote";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

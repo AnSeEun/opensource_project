@@ -267,6 +267,10 @@
               <button class="imageInputBtn" v-on:click="setFileExploer(index)">
                 이미지 업로드
               </button>
+              <span class="note-face">
+                <i class="far fa-smile-wink" @click="detectEmotion(index)"></i>
+              </span>
+              <span class="emotionModal">I FEEL LIKE #{{ note.emotion }}</span>
             </div>
           </div>
         </tr>
@@ -524,7 +528,7 @@
             <span class="note-face">
               <i class="far fa-smile-wink" @click="detectEmotion(index)"></i>
             </span>
-            <span class="emotionModal">I FEEL LIKE  #{{ note.emotion }}</span>
+            <span class="emotionModal">I FEEL LIKE #{{ note.emotion }}</span>
           </div>
         </div>
 
@@ -632,7 +636,7 @@ export default {
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
           filename: "",
-          emotion: "",
+          emotion: "NockNote",
         },
         {
           category: "To-do List",
@@ -659,7 +663,7 @@ export default {
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
           filename: "",
-          emotion: "",
+          emotion: "NockNote",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -755,6 +759,7 @@ export default {
     deleteNoteContents(index) {
       this.notes[index].text = "";
       this.notes[index].img_path = null;
+      this.notes[index].emotion = "NockNote";
     },
     deleteContentModalIn(index) {
       this.notes[index].contentModal = true;
