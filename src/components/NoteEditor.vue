@@ -107,8 +107,8 @@ export default {
       lock_modal: false,
       img_comment: "",
       lock_value: null,
-      img_path2: "",
       filename: "",
+      emotion: "",
     };
   },
   props: ["categorylist"],
@@ -139,8 +139,8 @@ export default {
         this.predicted,
         this.lock_modal,
         this.img_comment,
-        this.img_path2,
         this.filename,
+        this.emotion
       );
       this.category = "기본";
       this.nickname = "user";
@@ -159,8 +159,8 @@ export default {
       this.predicted = "";
       this.lock_modal = false;
       this.img_comment = "";
-      this.img_path2 = "";
-      this.filename= "";
+      this.filename = "";
+      this.emotion = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

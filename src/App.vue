@@ -521,9 +521,10 @@
               </div>
             </transition>
 
-            <span class="note-camera">
-              <i class="fas fa-camera" @click="setCapture(index)"></i>
+            <span class="note-face">
+              <i class="far fa-smile-wink" @click="detectEmotion(index)"></i>
             </span>
+            <span class="emotionModal">I FEEL LIKE  #{{ note.emotion }}</span>
           </div>
         </div>
 
@@ -630,8 +631,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
-          img_path2: "",
           filename: "",
+          emotion: "",
         },
         {
           category: "To-do List",
@@ -657,8 +658,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
-          img_path2: "",
           filename: "",
+          emotion: "",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -682,8 +683,6 @@ export default {
       lat: "",
       lon: "",
       imgURL: null,
-      img_path2: "",
-      filename: "",
     };
   },
 
@@ -718,8 +717,8 @@ export default {
       predicted,
       lock_modal,
       img_comment,
-      img_path2,
-      filename
+      filename,
+      emotion
     ) {
       this.notes.push({
         category: category,
@@ -745,8 +744,8 @@ export default {
         predicted: predicted,
         lock_modal: lock_modal,
         img_comment: img_comment,
-        img_path2: img_path2,
         filename: filename,
+        emotion: emotion,
       });
       this.editorOpen = false;
     },
@@ -848,7 +847,7 @@ export default {
       };
     },
     setFileExploer: function(index) {
-      console.log("setFileExploer!", index);
+      //console.log("setFileExploer!", index);
       this.imgIndex = index;
       document.querySelector(".imageInput").click();
     },
@@ -965,7 +964,7 @@ export default {
     },
 
     modalLock(index) {
-      console.log("modal: ", index);
+      //console.log("modal: ", index);
       this.notes[index].lock_modal = !this.notes[index].lock_modal;
     },
 
@@ -978,10 +977,10 @@ export default {
       this.notes[index].img_comment_modal = false;
     },
 
-    setCapture: async function(index) {
+    detectEmotion: async function(index) {
       //let tmp;
       let result;
-      let emotion;
+      //let emotion;
       //let file = this.notes[index].img_path;
       let filename = this.notes[index].filename;
       //filename = img
@@ -999,10 +998,10 @@ export default {
         .then(res => {
           //console.log(res.data);
           result = res.data["faces"][0];
-          emotion = result["emotion"]["value"];
+          this.notes[index].emotion = result["emotion"]["value"];
         });
-      console.log(result);
-      console.log(emotion);
+      //console.log(result);
+      //console.log(this.notes[index].emotion);
     },
   },
 
