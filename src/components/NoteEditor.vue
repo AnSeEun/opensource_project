@@ -36,7 +36,7 @@
         >
         </i>
       </div>
-    
+
       <textarea
         v-else
         rows="10"
@@ -49,28 +49,26 @@
         </span>
       </div>
       <div class="note-editor-bottom">
-        <div v-if="lock ===true && lock_value ===null"/>
+        <div v-if="lock === true && lock_value === null" />
         <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
       <div>
-        노트 잠금 
-        <input type="radio" id="lock" v-bind:value=true v-model="lock">
+        노트 잠금
+        <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
         <label for="lock">Yes</label>
-        <input type="radio" id="unlock" v-bind:value=false v-model="lock">
+        <input type="radio" id="unlock" v-bind:value="false" v-model="lock" />
         <label for="unlock">No</label>
       </div>
       <div v-if="lock">
-      <select v-model="lock_value">
-        <option>휴대폰</option>
-        <option>머그컵</option>
-        <option>마우스</option>
-        <option>키보드</option>
-      </select>
+        <select v-model="lock_value">
+          <option>휴대폰</option>
+          <option>머그컵</option>
+          <option>마우스</option>
+          <option>키보드</option>
+        </select>
       </div>
-      
-      
     </tr>
   </div>
 </template>
@@ -100,13 +98,12 @@ export default {
       img_path: "",
       contentModal: false,
       lock: false,
-      lock_answer:false,
+      lock_answer: false,
       webCamStart: false,
       predicted: "",
       lock_modal: false,
       img_comment: "",
       lock_value: null,
-      
     };
   },
   props: ["categorylist"],
@@ -136,7 +133,7 @@ export default {
         this.webCamStart,
         this.predicted,
         this.lock_modal,
-        this.img_comment,
+        this.img_comment
       );
       this.category = "기본";
       this.nickname = "user";
@@ -151,7 +148,7 @@ export default {
       this.is_incli = false;
       this.img_path = "";
       this.contentModal = false;
-      this.lock_value="";
+      this.lock_value = "";
       this.predicted = "";
       this.lock_modal = false;
       this.img_comment = "";

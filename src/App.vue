@@ -519,7 +519,7 @@
             </transition>
 
             <span class="note-camera">
-              <i class="fas fa-camera" @click="setCaptureCam(index)"></i>
+              <i class="fas fa-camera" @click="setCapture(index)"></i>
             </span>
           </div>
         </div>
@@ -584,6 +584,7 @@ import * as tf from "@tensorflow/tfjs";
 var Vue = require("vue/dist/vue");
 import VueResource from "vue-resource";
 Vue.use(VueResource);
+import PythonShell from "python-shell";
 
 let model;
 
@@ -956,6 +957,21 @@ export default {
 
     imageCommentModalOut(index) {
       this.notes[index].img_comment_modal = false;
+    },
+
+    setCapture: function(index) {
+      //console.log(PythonShell);
+      let ps = new PythonShell("my_script.py");
+      console.log(index);
+      console.log(ps);
+      //PythonShell.run('my_script.py');
+      // ps.run("my_script.py", null, function(err) {
+      //   if (err) throw err;
+      //   console.log("finished");
+      // });
+
+      console.log(PythonShell);
+      //console.log(PythonShell.handler());
     },
   },
 
