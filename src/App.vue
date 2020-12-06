@@ -636,7 +636,7 @@ export default {
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
           filename: "",
-          emotion: "NockNote",
+          emotion: "NoteNock",
         },
         {
           category: "To-do List",
@@ -663,7 +663,7 @@ export default {
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
           filename: "",
-          emotion: "NockNote",
+          emotion: "NoteNock",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -759,7 +759,7 @@ export default {
     deleteNoteContents(index) {
       this.notes[index].text = "";
       this.notes[index].img_path = null;
-      this.notes[index].emotion = "NockNote";
+      this.notes[index].emotion = "NoteNock";
     },
     deleteContentModalIn(index) {
       this.notes[index].contentModal = true;
@@ -866,6 +866,7 @@ export default {
         this.notes[this.imgIndex].img_path = this.imgUrl;
         this.notes[this.imgIndex].filename = this.imgFile[0].name;
       };
+      this.notes[this.imgIndex].emotion = "NoteNock";
     },
     setlock(index) {
       this.notes[index].lock = true;
