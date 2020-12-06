@@ -4,16 +4,19 @@
       <img src="./assets/hellos_logo.png" />
       <p><a href="javascript:location.reload()">Note Knock</a></p>
       <div class="weatherNote" v-if="view">
-        <div class="weather">
-          <span>국가{{ country }}</span>
-          <span>도시{{ city }}</span>
-        </div>
         <div>
-          <span>현재온도{{ temp.toFixed(2) }}º</span>
-          <span>체감온도{{ feels_like.toFixed(2) }}º</span>
-          <span>{{ weather[0].description }}</span>
-          <img :src="imgURL" />
+          <span><img :src="imgURL"/></span>
+          <div class="local">
+            <span>{{ country }}</span>
+            <span>{{ city }}</span>
+            <span>{{ weather[0].description }}</span>
+          </div>
         </div>
+        <div class="temperature">
+          <span>현재온도&nbsp;{{ temp.toFixed(2) }}º</span>
+          <span>체감온도&nbsp;{{ feels_like.toFixed(2) }}º</span>
+        </div>
+
         <!--국가명: {{ country }} 도시명 : {{ city }} 현재 온도:
         {{ temp.toFixed(2) }}º 체감 온도: {{ feels_like.toFixed(2) }}º 날씨:{{
           weather[0].description
@@ -944,6 +947,7 @@ export default {
     },
 
     modalLock(index) {
+      console.log("modal: ", index);
       this.notes[index].lock_modal = !this.notes[index].lock_modal;
     },
 

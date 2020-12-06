@@ -118,22 +118,58 @@ textarea {
 }
 
 .weatherNote {
+  //font-family: "Nerko One", cursive;
   font-family: "Noto Sans KR", sans-serif;
-  font-size: 20px;
-
+  display: inline;
+  margin-left: 100px;
+  color: rgb(255, 255, 255);
+  // local
   div:nth-child(1) {
-    background-color: #7a6a6e;
+    //background-color: #1bce33;
+    margin-left: 100px;
+    font-weight: bold;
+    //font-size: 30px;
+    font-style: italic;
 
     span {
       margin-right: 10px;
+      text-shadow: 1px 1px #654b52;
     }
   }
+  // temperature
   div:nth-child(2) {
-    background-color: #fc5e5e;
-
+    position: absolute;
+    //background-color: #fc5e5e;
+    font-weight: bold;
+    width: auto;
+    height: auto;
     span {
       margin-right: 10px;
+      text-shadow: 1px 1px #eb9f9f;
     }
+  }
+
+  img {
+    position: absolute;
+    top: 0px;
+    //left: 580px;
+    left: 310px;
+    width: 90px;
+    height: 90px;
+    margin-left: 5px;
+  }
+
+  .local {
+    position: absolute;
+    top: 10px;
+    left: 405px;
+    font-size: 30px;
+  }
+
+  .temperature {
+    position: absolute;
+    top: 53px;
+    left: 405px;
   }
 }
 
@@ -245,8 +281,8 @@ textarea {
   font-family: "Noto Sans KR", sans-serif;
   column-count: 4;
   column-gap: 1em;
-  margin: 10px 0px 10px 0px;
-  height: auto;
+  margin: 0px 0px 10px 0px;
+  height: 396px;
   width: 100%;
   display: table;
   margin-left: 50px;
@@ -260,6 +296,7 @@ textarea {
   flex-direction: column;
   // background: #fff;
   padding: 16px;
+  //padding-bottom: 14px;
   box-shadow: 0 2px 2px rgba(126, 83, 83, 0.05),
     0 4px 4px rgba(126, 83, 83, 0.05), 0 8px 8px rgba(126, 83, 83, 0.05),
     0 16px 16px rgba(126, 83, 83, 0.05);
@@ -299,6 +336,22 @@ textarea {
     border-radius: 4px;
     transition: 0.5s;
   }
+
+  .mic {
+    color: #7a6a6e;
+    margin-left: 10px;
+  }
+
+  .lockEditor {
+    font-weight: bold;
+    color: #654b52;
+    margin-left: 10px;
+    margin-top: 3px;
+    width: 220px;
+    select {
+      width: auto;
+    }
+  }
 }
 
 .note-title {
@@ -316,6 +369,7 @@ textarea {
   column-count: 4;
   column-gap: 1em;
   margin: 10px 0px 10px 0px;
+  //padding-left: 20px;
   height: auto;
   width: 100%;
   display: table;
@@ -344,9 +398,9 @@ textarea {
   }
 }
 
-// .note-editor-container {
-//   position: relative;
-// }
+.note-editor-container {
+  margin-left: 10px;
+}
 
 .note {
   position: relative;
@@ -359,7 +413,7 @@ textarea {
   flex-direction: column;
   display: inline-block;
   // margin: 1em 1em 1em 2em;
-  margin: 0px 0px 30px 60px;
+  margin: 0px 60px 30px 70px;
   //width: 100%;
   width: 300px;
   height: auto;
@@ -600,7 +654,7 @@ textarea {
   margin-left: 5px;
   width: 240px;
   height: 300px;
-  background-color:#584e50;
+  background-color: #584e50;
   transition: 0.3s;
   z-index: 4;
   box-shadow: 1px 1px 5px #5f4d4d;
