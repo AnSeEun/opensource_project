@@ -44,16 +44,35 @@
         placeholder="Take a note..."
       ></textarea>
       <div v-if="category != 'To-do List'">
-        <span @click="speech_to_text">
+        <span class="mic" @click="speech_to_text">
           <i class="fas fa-microphone"></i>
         </span>
       </div>
+      
+      <div class="lockEditor">
+        노트 잠금
+        <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
+        <label for="lock">Yes</label>
+        <input type="radio" id="unlock" v-bind:value="false" v-model="lock" />
+        <label for="unlock">No</label>
+
+        <span v-if="lock">
+          <select v-model="lock_value">
+            <option>휴대폰</option>
+            <option>머그컵</option>
+            <option>마우스</option>
+            <option>키보드</option>
+          </select>
+        </span>
+      </div>
+      
       <div class="note-editor-bottom">
         <div v-if="lock === true && lock_value === null" />
         <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
+<<<<<<< HEAD
       <div>
         노트 잠금
         <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
@@ -69,6 +88,9 @@
           <option>키보드</option>
         </select>
       </div>
+=======
+      
+>>>>>>> 8410307330f0ee7c14264f2cece21bb6bad2f6b3
     </tr>
   </div>
 </template>
