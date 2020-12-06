@@ -48,7 +48,7 @@
           <i class="fas fa-microphone"></i>
         </span>
       </div>
-      
+
       <div class="lockEditor">
         노트 잠금
         <input type="radio" id="lock" v-bind:value="true" v-model="lock" />
@@ -65,14 +65,13 @@
           </select>
         </span>
       </div>
-      
+
       <div class="note-editor-bottom">
         <div v-if="lock === true && lock_value === null" />
         <button v-else @click="createNew" class="fas fas-check-circle">
           <i class="fas fa-check-circle"></i>
         </button>
       </div>
-      
     </tr>
   </div>
 </template>
@@ -108,6 +107,8 @@ export default {
       lock_modal: false,
       img_comment: "",
       lock_value: null,
+      filename: "",
+      emotion: "",
     };
   },
   props: ["categorylist"],
@@ -137,7 +138,9 @@ export default {
         this.webCamStart,
         this.predicted,
         this.lock_modal,
-        this.img_comment
+        this.img_comment,
+        this.filename,
+        this.emotion
       );
       this.category = "기본";
       this.nickname = "user";
@@ -156,6 +159,8 @@ export default {
       this.predicted = "";
       this.lock_modal = false;
       this.img_comment = "";
+      this.filename = "";
+      this.emotion = "";
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

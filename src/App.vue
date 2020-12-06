@@ -128,7 +128,6 @@
               <img
                 class="note-image"
                 :src="note.img_path"
-                v-on:click="predict(index)"
                 v-on:mouseover="imageCommentModalIn(index)"
                 v-on:mouseout="imageCommentModalOut(index)"
               />
@@ -326,7 +325,6 @@
             <img
               class="note-image"
               :src="note.img_path"
-              v-on:click="predict(index)"
               v-on:mouseover="imageCommentModalIn(index)"
               v-on:mouseout="imageCommentModalOut(index)"
             />
@@ -522,6 +520,11 @@
                 </span>
               </div>
             </transition>
+
+            <span class="note-face">
+              <i class="far fa-smile-wink" @click="detectEmotion(index)"></i>
+            </span>
+            <span class="emotionModal">I FEEL LIKE  #{{ note.emotion }}</span>
           </div>
         </div>
 
@@ -582,9 +585,14 @@ import categoryadd from "./components/CategoryAdd.vue";
 import * as tmImage from "@teachablemachine/image";
 import * as cocoSSD from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
+//import * as ps from "python-shell";
+import axios from "axios";
 var Vue = require("vue/dist/vue");
 import VueResource from "vue-resource";
 Vue.use(VueResource);
+// import fs from "file-system";
+// import os from "os";
+// import path from "path";
 
 let model;
 
@@ -623,6 +631,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
+          filename: "",
+          emotion: "",
         },
         {
           category: "To-do List",
@@ -648,6 +658,8 @@ export default {
           predicted: "",
           lock_modal: false,
           img_comment: "인식하지 못하였습니다.",
+          filename: "",
+          emotion: "",
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -704,7 +716,9 @@ export default {
       webCamStart,
       predicted,
       lock_modal,
-      img_comment
+      img_comment,
+      filename,
+      emotion
     ) {
       this.notes.push({
         category: category,
@@ -730,6 +744,8 @@ export default {
         predicted: predicted,
         lock_modal: lock_modal,
         img_comment: img_comment,
+        filename: filename,
+        emotion: emotion,
       });
       this.editorOpen = false;
     },
@@ -831,7 +847,7 @@ export default {
       };
     },
     setFileExploer: function(index) {
-      console.log("setFileExploer!", index);
+      //console.log("setFileExploer!", index);
       this.imgIndex = index;
       document.querySelector(".imageInput").click();
     },
@@ -843,6 +859,7 @@ export default {
       this.fileReader.onload = event => {
         this.imgUrl = event.target.result;
         this.notes[this.imgIndex].img_path = this.imgUrl;
+        this.notes[this.imgIndex].filename = this.imgFile[0].name;
       };
     },
     setlock(index) {
@@ -947,7 +964,7 @@ export default {
     },
 
     modalLock(index) {
-      console.log("modal: ", index);
+      //console.log("modal: ", index);
       this.notes[index].lock_modal = !this.notes[index].lock_modal;
     },
 
@@ -958,6 +975,33 @@ export default {
 
     imageCommentModalOut(index) {
       this.notes[index].img_comment_modal = false;
+    },
+
+    detectEmotion: async function(index) {
+      //let tmp;
+      let result;
+      //let emotion;
+      //let file = this.notes[index].img_path;
+      let filename = this.notes[index].filename;
+      //filename = img
+      // console.log(filename);
+      //let file = "123123";
+      // let file = "fileurl123";/
+      //console.log("file: ", file);
+      console.log(index);
+      await axios
+        .post("http://127.0.0.1:3000/face", {
+          //fileUrl: file,
+          fileUrl: "D:/GitKumoh/Documents/osp20-hello/src/assets/" + filename,
+          //fileUrl: file,
+        })
+        .then(res => {
+          //console.log(res.data);
+          result = res.data["faces"][0];
+          this.notes[index].emotion = result["emotion"]["value"];
+        });
+      //console.log(result);
+      //console.log(this.notes[index].emotion);
     },
   },
 

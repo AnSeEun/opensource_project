@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Nerko+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Acme&family=Alfa+Slab+One&family=Anton&family=Bree+Serif&family=Sansita+Swashed:wght@600&display=swap");
 
 html {
   box-sizing: border-box;
@@ -1273,7 +1274,36 @@ textarea {
   }
 }
 
-.note-camera {
-  margin-left: 10px;
-  background-color: lawngreen;
+.note-face {
+  border: none;
+  border-radius: 3px;
+  top: 343px;
+  margin-top: 10px;
+  margin-left: 9px;
+  padding: 0px 7px 2px 6px;
+  width: 30px;
+  color: #fff;
+  font-size: 18px;
+  //font-size: large;
+  background-color: #7a6a6e;
+
+  &:active {
+    transition: 0.2s;
+    // transform: scale(1.03, 1.03);
+    background-color: #eb9f9f;
+  }
+}
+
+.emotionModal {
+  display: block;
+  color: #654b52;
+  padding-left: 1%;
+  font-size: 20px;
+  //font-weight: bold;
+  //font-family: "Acme", sans-serif;
+  //font-family: "Alfa Slab One", cursive;
+  font-family: "Anton", sans-serif;
+  //font-family: "Bree Serif", serif;
+  //font-family: "Sansita Swashed", cursive;
+  //background-color: #7a6a6e;
 }
