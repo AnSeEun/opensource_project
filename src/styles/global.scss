@@ -654,7 +654,7 @@ textarea {
   top: 8.5%;
   margin-left: 5px;
   width: 240px;
-  height: 300px;
+  height: 290px;
   background-color: #584e50;
   transition: 0.3s;
   z-index: 4;
@@ -688,6 +688,9 @@ textarea {
   //background: #f4cccc;
   //border: 1px solid #7a6a6e;
   //z-index: 3;
+
+  font-weight: bold;
+  font-size: large;
 }
 
 .webcamModalCancle {

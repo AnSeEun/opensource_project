@@ -559,8 +559,7 @@
               </span>
               <div id="cam" class="webcam-modal-wrap"></div>
               <span class="webcam-modal-content">
-                Object: {{ lock_predicted }}<br />
-                Key: {{ note.lock_value }}
+                LOCK NOTE
               </span>
               <span
                 v-if="lock_predicted === note.lock_value"
