@@ -120,8 +120,16 @@
               v-model="note.title"
               placeholder="Title"
             />
-            <p />
-            <div></div>
+            <i
+              @click="translateNote(index)"
+              class="fas fa-language translate-note"
+            >
+            </i>
+            <transition name="bounce">
+              <div v-show="note.translate_modal" class="translateModal">
+                {{ note.translate }}
+              </div>
+            </transition>
             <div v-show="note.img_path" class="note-image-wrap">
               <img
                 class="note-image"
@@ -327,8 +335,8 @@
           <transition name="bounce">
             <div v-show="note.translate_modal" class="translateModal">
               {{ note.translate }}
-            </div></transition
-          >
+            </div>
+          </transition>
 
           <div v-show="note.img_path" class="note-image-wrap">
             <img
@@ -1008,7 +1016,7 @@ export default {
       //let file = "123123";
       // let file = "fileurl123";/
       //console.log("file: ", file);
-      console.log(index);
+      //console.log(index);
       await axios
         .post("http://127.0.0.1:3000/face", {
           //fileUrl: file,
@@ -1026,7 +1034,7 @@ export default {
 
     translateNote: async function(index) {
       this.notes[index].translate_modal = !this.notes[index].translate_modal;
-      console.log("번역" + index + this.notes[index].translate_modal);
+      //console.log("번역" + index + this.notes[index].translate_modal);
       //var query = "안녕하세요";
 
       //let result;
@@ -1042,7 +1050,7 @@ export default {
             res.data["message"]["result"].translatedText;
           //console.log(res.data['message']['result'].translatedText);
         });
-      console.log(this.notes[index].translate);
+      //console.log(this.notes[index].translate);
       //this.notex[index].translate =
     },
   },
