@@ -109,6 +109,8 @@ export default {
       lock_value: null,
       filename: "",
       emotion: "NoteKnock",
+      translate: "",
+      translate_modal: false,
     };
   },
   props: ["categorylist"],
@@ -140,7 +142,9 @@ export default {
         this.lock_modal,
         this.img_comment,
         this.filename,
-        this.emotion
+        this.emotion,
+        this.translate,
+        this.translate_modal,
       );
       this.category = "기본";
       this.nickname = "user";
@@ -161,6 +165,8 @@ export default {
       this.img_comment = "";
       this.filename = "";
       this.emotion = "NoteKnock";
+      this.translate = "";
+      this.translate_modal = false;
     },
     deleteNote(index) {
       this.$emit("noteDeleted", index);

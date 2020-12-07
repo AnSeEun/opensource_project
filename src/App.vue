@@ -121,9 +121,7 @@
               placeholder="Title"
             />
             <p />
-            <div class="note-cam-wrap">
-              <!--카메라위치-->
-            </div>
+            <div></div>
             <div v-show="note.img_path" class="note-image-wrap">
               <img
                 class="note-image"
@@ -321,10 +319,17 @@
             v-model="note.title"
             placeholder="Title"
           />
-          <p />
-          <div class="note-cam-wrap">
-            <!--카메라위치-->
-          </div>
+          <i
+            @click="translateNote(index)"
+            class="fas fa-language translate-note"
+          >
+          </i>
+          <transition name="bounce">
+            <div v-show="note.translate_modal" class="translateModal">
+              {{ note.translate }}
+            </div></transition
+          >
+
           <div v-show="note.img_path" class="note-image-wrap">
             <img
               class="note-image"
@@ -637,6 +642,8 @@ export default {
           img_comment: "인식하지 못하였습니다.",
           filename: "",
           emotion: "NoteKnock",
+          translate: "",
+          translate_modal: false,
         },
         {
           category: "To-do List",
@@ -664,6 +671,8 @@ export default {
           img_comment: "인식하지 못하였습니다.",
           filename: "",
           emotion: "NoteKnock",
+          translate: "",
+          translate_modal: false,
         },
       ],
       categorys: ["기본", "To-do List"],
@@ -722,7 +731,9 @@ export default {
       lock_modal,
       img_comment,
       filename,
-      emotion
+      emotion,
+      translate,
+      translate_modal
     ) {
       this.notes.push({
         category: category,
@@ -750,6 +761,8 @@ export default {
         img_comment: img_comment,
         filename: filename,
         emotion: emotion,
+        translate: translate,
+        translate_modal: translate_modal,
       });
       this.editorOpen = false;
     },
@@ -1009,6 +1022,28 @@ export default {
         });
       //console.log(result);
       //console.log(this.notes[index].emotion);
+    },
+
+    translateNote: async function(index) {
+      this.notes[index].translate_modal = !this.notes[index].translate_modal;
+      console.log("번역" + index + this.notes[index].translate_modal);
+      //var query = "안녕하세요";
+
+      //let result;
+      await axios
+        .post("http://127.0.0.1:3001/translate", {
+          query: this.notes[index].text,
+          //let query = "내 이름은 별입니다.";
+          //console.log(query);
+        })
+        .then(res => {
+          //result = json["message"];
+          this.notes[index].translate =
+            res.data["message"]["result"].translatedText;
+          //console.log(res.data['message']['result'].translatedText);
+        });
+      console.log(this.notes[index].translate);
+      //this.notex[index].translate =
     },
   },
 
