@@ -22,7 +22,7 @@ app.post("/face", function(req, res) {
   var api_url = "https://openapi.naver.com/v1/vision/face"; // 얼굴 감지
 
   var _formData = {
-    image: "image",
+    //image: "image",
     image: fs.createReadStream(obj.fileUrl),
     // image: fs.createReadStream(__dirname + "/images/iu.jpg"), // FILE 이름
     // image: obj.fileUrl,
@@ -41,6 +41,7 @@ app.post("/face", function(req, res) {
     },
     function(error, response, body) {
       console.log(body);
+      console.log(_req.body);
       res.send(body);
     }
   );
