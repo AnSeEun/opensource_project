@@ -12,10 +12,10 @@ app.use(cors());
 
 app.post("/face", function(req, res) {
   var request = require("request");
-  console.log("바디");
-  console.log(req.body);
+  //console.log("바디");
+  //console.log(req.body);
   const obj = JSON.parse(JSON.stringify(req.body));
-  console.log("오브젝입니다:" + obj);
+  //console.log("오브젝입니다:" + obj);
   // console.log(obj.fileUrl);
   // console.log(obj["fileUrl"]);
   // console.log();
